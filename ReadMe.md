@@ -1,1 +1,3 @@
-一些VPN配置文件
+一些配置文件
+
+https://ip.skk.moe
