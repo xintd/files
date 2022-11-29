@@ -85,7 +85,7 @@ proxy-providers:
   portx:
     type: http
     path: ./proxies/portx.yaml
-    url: "https://earr.one/link/cVUJcCVZSCqTZvCt?sub=3"  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: "https://earr.one/link/ATBMcu1CdMHnS0pk?sub=3"  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 900
     health-check:
       enable: true
