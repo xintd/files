@@ -146,6 +146,7 @@ goto endd
 ::====================================================================================
 
 :wireguard_start
+if exist %exeName% goto wireguard_begin
 echo.
 echo.
 echo. 访问 https://download.wireguard.com/windows-client/ 地址下载最新wireguard客户端安装
@@ -154,6 +155,7 @@ echo.
 echo.
 pause
 if not exist %exeName% goto wireguard_start
+:wireguard_begin
 rem 判断是否开启Wireguard的Pre/Post命令支持，只能通过修改注册表的方式开启
 REG QUERY HKLM\Software\WireGuard /v DangerousScriptExecution>nul 2>nul&&goto downloadBatFiles
 reg add HKLM\Software\WireGuard /v DangerousScriptExecution /t REG_DWORD /d 1 /f
