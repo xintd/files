@@ -13,9 +13,9 @@ tcp-concurrent: true         #【Meta专属】TCP连接并发，如果域名解�
                                          # 并发所有IP，选择握手最快的IP进行连接
 # Enable the TUN listener
 tun:
-  enable: true
-  device: meta
-  stack: gvisor #only gvisor
+  enable: false
+  device: meta  #MacOS建议删除此项
+  stack: gvisor #system/gvisor/lwip lwip仅为1.13.2以上的功能
   dns-hijack:
     - '0.0.0.0:53'
   auto-detect-interface: true
@@ -80,7 +80,7 @@ proxy-providers:
     interval: 900
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/gen_204
       interval: 300
 
 proxy-groups:
@@ -104,7 +104,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(港|HK|Hong|MO|澳门)'
     use:
       - clash
@@ -112,7 +112,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(加拿大|CA|AU|澳大)'
     use:
       - clash
@@ -120,7 +120,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(新加坡|SG)'
     use:
       - clash
@@ -128,7 +128,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(美|US|United States)'
     use:
       - clash
@@ -136,7 +136,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(德|DE|FR|法|NL|FI)'
     use:
       - clash
@@ -144,7 +144,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(日|JP)'
     use:
       - clash
@@ -152,7 +152,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     filter: '(?i)(韩|韓|KR)'
     use:
       - clash
@@ -160,7 +160,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/gen_204
     exclude-filter: '(?i)(港|HK|Hong|MO|澳门|加拿大|CA|AU|澳大|新加坡|SG|美|US|United States|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR)'
     use:
       - clash
