@@ -64,26 +64,26 @@ portx = https://earr.one/link/ATBMcu1CdMHnS0pk?sub=3,udp=false,fast-open=false,v
 # load-balance负载均衡，可选三种算法：random：随机选择策略组可用节点，round-robin：轮询策略组可用节点，pcc：在random基础上，针对相同host使用同一节点，此处url用来测试节点可用性，每隔interval进行一次测速，max-timeout参数用于筛选测试时间超过max-timeout的节点为不可用节点
 # Auto = url-test, SubProxy, url = http://bing.com/,interval = 600
 # 自动选择最优节点-HK
-♻自动选择 = load-balance,HK&MO,CA&AU,SG,US,Europe,JP,KR,ZZ,portx.,url = http://www.apple.com/library/test/success.html,interval =300,max-timeout = 8000,algorithm = pcc,img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Round_Robin.png
+♻自动选择 = load-balance,HK&MO,CA&AU,SG,US,Europe,JP,KR,ZZ,portx.,url = https://www.google.com/generate_204,interval =300,max-timeout = 8000,algorithm = pcc,img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Round_Robin.png
 # 服务器按地区分组策略
 # > portx
-portx. = url-test,订阅,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/HK.png
+portx. = url-test,订阅,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/HK.png
 # > 港澳
-HK&MO = url-test,港澳,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/HK.png
+HK&MO = url-test,港澳,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/HK.png
 # > 加拿大&澳大利亚
-CA&AU = url-test,加拿大&澳大利亚,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/CA.png
+CA&AU = url-test,加拿大&澳大利亚,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/CA.png
 # > 新加坡
-SG = url-test,新加坡,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://raw.githubusercontent.com/erdongchanyo/icon/main/Policy-Country/SG.png
+SG = url-test,新加坡,url = https://www.google.com/generate_204,interval =600,img-url = https://raw.githubusercontent.com/erdongchanyo/icon/main/Policy-Country/SG.png
 # > 美国
-US = url-test,美国,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/US.png
+US = url-test,美国,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/US.png
 # > 欧洲
-Europe = url-test,欧洲,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://raw.githubusercontent.com/fivetime/WorldFlags/master/EU.png
+Europe = url-test,欧洲,url = https://www.google.com/generate_204,interval =600,img-url = https://raw.githubusercontent.com/fivetime/WorldFlags/master/EU.png
 # > 日本
-JP = url-test,日本,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/JP.png
+JP = url-test,日本,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/JP.png
 # > 韩国
-KR = url-test,韩国,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/KR.png
+KR = url-test,韩国,url = https://www.google.com/generate_204,interval =600,img-url = https://cdn.jsdelivr.net/gh/erdongchanyo/icon@main/Policy-Country/KR.png
 # > 其它
-ZZ = url-test,其它国家,url = http://www.apple.com/library/test/success.html,interval =600,img-url = https://raw.githubusercontent.com/fivetime/WorldFlags/master/checkered.png
+ZZ = url-test,其它国家,url = https://www.google.com/generate_204,interval =600,img-url = https://raw.githubusercontent.com/fivetime/WorldFlags/master/checkered.png
 # 广告、隐私、运营商劫持或恶意网站
 💠防御模式 = select,REJECT,DIRECT,img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hijacking.png
 

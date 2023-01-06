@@ -80,14 +80,14 @@ proxy-providers:
     interval: 900
     health-check:
       enable: true
-      url: https://www.google.com/gen_204
+      url: https://www.google.com/generate_204
       interval: 300
 
 proxy-groups:
   - name: 🚀 PROXY
     type: url-test
     interval: 300
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     strategy: round-robin   # load-balance 策略：round-robin ：所有请求不使用同一代理
                             # consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
     proxies:
@@ -104,7 +104,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(港|HK|Hong|MO|澳门)'
     use:
       - clash
@@ -112,7 +112,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(加拿大|CA|AU|澳大)'
     use:
       - clash
@@ -120,7 +120,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(新加坡|SG)'
     use:
       - clash
@@ -128,7 +128,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(美|US|United States)'
     use:
       - clash
@@ -136,7 +136,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(德|DE|FR|法|NL|FI)'
     use:
       - clash
@@ -144,7 +144,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(日|JP)'
     use:
       - clash
@@ -152,7 +152,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(韩|韓|KR)'
     use:
       - clash
@@ -160,7 +160,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: https://www.google.com/gen_204
+    url: https://www.google.com/generate_204
     exclude-filter: '(?i)(港|HK|Hong|MO|澳门|加拿大|CA|AU|澳大|新加坡|SG|美|US|United States|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR)'
     use:
       - clash

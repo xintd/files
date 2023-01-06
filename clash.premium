@@ -64,7 +64,7 @@ proxy-providers:
     filter: '(?i)(港|HK|Hong|MO)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   加拿大&澳大利亚:
     type: http
@@ -74,7 +74,7 @@ proxy-providers:
     filter: '(?i)(加拿大|CA|AU|澳大)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   美国:
     type: http
@@ -84,7 +84,7 @@ proxy-providers:
     filter: '(?i)(美|US|United States)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   新加坡:
     type: http
@@ -94,7 +94,7 @@ proxy-providers:
     filter: '(?i)(新加坡|SG|Singapore)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   韩国:
     type: http
@@ -104,7 +104,7 @@ proxy-providers:
     filter: '(?i)(KR|Korea|KOR|韩|韓)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   日本:
     type: http
@@ -114,7 +114,7 @@ proxy-providers:
     filter: '(?i)(日|JP|Japan)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
   其它国家:
     type: http
@@ -124,14 +124,14 @@ proxy-providers:
     filter: '(RU|TW|DE|GB|FR|NO|PA|ID|IN|IR|NL|FI|IE|PH|地区|地址)'
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
 
 proxy-groups:
   - name: 🚀 PROXY
     type: load-balance
     interval: 300
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     strategy: round-robin
     proxies:
       - HK&MO
@@ -147,49 +147,49 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 港澳
   - name: CA&AU
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 加拿大&澳大利亚
   - name: US
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 美国
   - name: SG
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 新加坡
   - name: KR
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 韩国
   - name: JP
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 日本
   - name: ZZ
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     use:
       - 其它国家
 
