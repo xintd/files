@@ -32,7 +32,7 @@ host = 127.0.0.1
 [Remote Proxy]
 # 订阅节点
 # 格式为 别名 = 订阅 URL
-Subs = https://xintd.tk/xintd/TopFreeProxies/raw/master/Eternity,udp=false,fast-open=false,vmess-aead=true,enabled=true
+Subs = https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity,udp=false,fast-open=false,vmess-aead=true,enabled=true
 #  网址 https://portx.cc/user
 portx = https://earr.one/link/ATBMcu1CdMHnS0pk?sub=3,udp=false,fast-open=false,vmess-aead=true,enabled=true
 

@@ -59,7 +59,7 @@ proxy-providers:
   港澳:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(港|HK|Hong|MO)'
     health-check:
@@ -69,7 +69,7 @@ proxy-providers:
   加拿大&澳大利亚:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(加拿大|CA|AU|澳大)'
     health-check:
@@ -79,7 +79,7 @@ proxy-providers:
   美国:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(美|US|United States)'
     health-check:
@@ -89,7 +89,7 @@ proxy-providers:
   新加坡:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(新加坡|SG|Singapore)'
     health-check:
@@ -99,7 +99,7 @@ proxy-providers:
   韩国:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(KR|Korea|KOR|韩|韓)'
     health-check:
@@ -109,7 +109,7 @@ proxy-providers:
   日本:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(?i)(日|JP|Japan)'
     health-check:
@@ -119,7 +119,7 @@ proxy-providers:
   其它国家:
     type: http
     path: ./profiles/proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml
     interval: 900
     filter: '(RU|TW|DE|GB|FR|NO|PA|ID|IN|IR|NL|FI|IE|PH|地区|地址)'
     health-check:

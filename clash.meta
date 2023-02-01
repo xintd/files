@@ -76,7 +76,7 @@ proxy-providers:
   clash:
     type: http
     path: ./proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/TopFreeProxies/master/Eternity.yaml  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 900
     health-check:
       enable: true
