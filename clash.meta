@@ -19,7 +19,7 @@ tcp-concurrent: true        #【Meta专属】TCP连接并发，如果域名解�
                             # 并发所有IP，选择握手最快的IP进行连接
 # Enable the TUN listener
 tun:
-    enable: false
+    enable: true
     device: meta  #MacOS建议删除此项
     stack: gvisor #system/gvisor/lwip lwip仅为1.13.2以上的功能
     dns-hijack:
@@ -87,9 +87,10 @@ dns:
             - https://dns.alidns.com/dns-query
             - https://doh.pub/dns-query
     nameserver:                       #默认DNS服务器，支持udp/tcp/dot/doh/doq
-        - https://dns.cloudflare.com/dns-query
-        - https://dns.google/dns-query
-        - https://doh.opendns.com/dns-query
+        - tls://8.8.8.8:853 # Google DNS over TLS
+        - tls://1.1.1.1:853 # cloudflare DNS over TLS
+        - https://1.1.1.1/dns-query # cloudflare DNS over HTTPS
+        - https://dns.google/dns-query # Google DNS over HTTPS
 
 proxies:
   - name: "wg"
