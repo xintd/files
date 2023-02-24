@@ -104,9 +104,11 @@ dns:
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
   # 将国内域名指定为国内 DOH 进行解析，其余 DNS 使用境外 DOH 解析
   nameserver-policy:
-    "geosite:cn": [https://doh.pub/dns-query,https://dns.alidns.com/dns-query]
-    #   'www.baidu.com': '114.114.114.114'
-    #   '+.internal.crop.com': '10.0.0.1'
+    "geosite:cn":
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    #'www.baidu.com': '114.114.114.114'
+    #'+.internal.crop.com': '10.0.0.1'
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
@@ -138,27 +140,29 @@ proxy-providers:
     url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity.yaml  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 900
     health-check:
-        enable: true
-        url: https://www.google.com/generate_204
-        interval: 300
+      enable: true
+      url: https://www.google.com/generate_204
+      interval: 300
 
 proxy-groups:
   - name: 🚀 PROXY
+    #url-test      通过httping URL 自动切换延迟最低的节点
+    #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
+    #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
     type: url-test
     interval: 300
     url: https://www.google.com/generate_204
-    strategy: round-robin   # load-balance 策略：round-robin ：所有请求不使用同一代理
-                            # consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
+    #strategy: round-robin
     proxies:
-        - HK&MO
-        - CA&AU
-        - SG
-        - US
-        - Europe
-        - JP
-        - KR
-        - ZZ
-        - wg
+      - HK&MO
+      - CA&AU
+      - SG
+      - US
+      - Europe
+      - JP
+      - KR
+      - ZZ
+      - wg
 
   - name: HK&MO
     type: url-test
@@ -167,7 +171,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(港|HK|Hong|MO|澳门)'
     use:
-        - clash
+      - clash
   - name: CA&AU
     type: url-test
     interval: 300
@@ -175,7 +179,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(加拿大|CA|AU|澳大)'
     use:
-        - clash
+      - clash
   - name: SG
     type: url-test
     interval: 300
@@ -183,7 +187,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(新加坡|SG)'
     use:
-        - clash
+      - clash
   - name: US
     type: url-test
     interval: 300
@@ -191,7 +195,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(美|US|United States)'
     use:
-        - clash
+      - clash
   - name: Europe
     type: url-test
     interval: 300
@@ -199,7 +203,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(德|DE|FR|法|NL|FI)'
     use:
-        - clash
+      - clash
   - name: JP
     type: url-test
     interval: 300
@@ -207,7 +211,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(日|JP)'
     use:
-        - clash
+      - clash
   - name: KR
     type: url-test
     interval: 300
@@ -215,7 +219,7 @@ proxy-groups:
     url: https://www.google.com/generate_204
     filter: '(?i)(韩|韓|KR)'
     use:
-        - clash
+      - clash
   - name: ZZ
     type: url-test
     interval: 300
@@ -223,11 +227,11 @@ proxy-groups:
     url: https://www.google.com/generate_204
     exclude-filter: '(?i)(港|HK|Hong|MO|澳门|加拿大|CA|AU|澳大|新加坡|SG|美|US|United States|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR)'
     use:
-        - clash
+      - clash
   - name: 🤘 手动选择
     type: select
     use:
-        - clash
+      - clash
 
 rule-providers:
   reject: # 广告域名列表
@@ -329,73 +333,73 @@ rule-providers:
     interval: 86400
 
 rules:
-    - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
-    - DOMAIN,cdn.jsdelivr.net,DIRECT     #规则文件直连下载
-    - PROCESS-NAME,v2ray,DIRECT
-    - PROCESS-NAME,xray,DIRECT
-    - PROCESS-NAME,naive,DIRECT
-    - PROCESS-NAME,trojan,DIRECT
-    - PROCESS-NAME,trojan-go,DIRECT
-    - PROCESS-NAME,ss-local,DIRECT
-    - PROCESS-NAME,privoxy,DIRECT
-    - PROCESS-NAME,leaf,DIRECT
-    - PROCESS-NAME,v2ray.exe,DIRECT
-    - PROCESS-NAME,xray.exe,DIRECT
-    - PROCESS-NAME,naive.exe,DIRECT
-    - PROCESS-NAME,trojan.exe,DIRECT
-    - PROCESS-NAME,trojan-go.exe,DIRECT
-    - PROCESS-NAME,ss-local.exe,DIRECT
-    - PROCESS-NAME,privoxy.exe,DIRECT
-    - PROCESS-NAME,leaf.exe,DIRECT
-    - PROCESS-NAME,Surge,DIRECT
-    - PROCESS-NAME,Surge 2,DIRECT
-    - PROCESS-NAME,Surge 3,DIRECT
-    - PROCESS-NAME,Surge 4,DIRECT
-    - PROCESS-NAME,Surge%202,DIRECT
-    - PROCESS-NAME,Surge%203,DIRECT
-    - PROCESS-NAME,Surge%204,DIRECT
-    - PROCESS-NAME,Thunder,DIRECT
-    - PROCESS-NAME,DownloadService,DIRECT
-    - PROCESS-NAME,qBittorrent,DIRECT
-    - PROCESS-NAME,Transmission,DIRECT
-    - PROCESS-NAME,fdm,DIRECT
-    - PROCESS-NAME,aria2c,DIRECT
-    - PROCESS-NAME,Folx,DIRECT
-    - PROCESS-NAME,NetTransport,DIRECT
-    - PROCESS-NAME,uTorrent,DIRECT
-    - PROCESS-NAME,WebTorrent,DIRECT
-    - PROCESS-NAME,aria2c.exe,DIRECT
-    - PROCESS-NAME,BitComet.exe,DIRECT
-    - PROCESS-NAME,fdm.exe,DIRECT
-    - PROCESS-NAME,NetTransport.exe,DIRECT
-    - PROCESS-NAME,qbittorrent.exe,DIRECT
-    - PROCESS-NAME,Thunder.exe,DIRECT
-    - PROCESS-NAME,ThunderVIP.exe,DIRECT
-    - PROCESS-NAME,transmission-daemon.exe,DIRECT
-    - PROCESS-NAME,transmission-qt.exe,DIRECT
-    - PROCESS-NAME,uTorrent.exe,DIRECT
-    - PROCESS-NAME,WebTorrent.exe,DIRECT
-    - DOMAIN,clash.razord.top,DIRECT
-    - DOMAIN,yacd.haishan.me,DIRECT
-    - RULE-SET,applications,DIRECT
-    - RULE-SET,private,DIRECT
-    - RULE-SET,reject,REJECT
-    - RULE-SET,icloud,DIRECT #
-    - RULE-SET,apple,DIRECT # 这三个为国内可直连地址，如果希望走代理改为🚀 PROXY
-    - RULE-SET,google,DIRECT #
-    - RULE-SET,proxy,🚀 PROXY
-    - RULE-SET,direct,DIRECT
-    - RULE-SET,telegramcidr,🚀 PROXY
-    - GEOIP,LAN,DIRECT,no-resolve
-    - GEOIP,CN,DIRECT,no-resolve
-    - RULE-SET,lancidr,DIRECT
-    - RULE-SET,cncidr,DIRECT
-    - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
+  - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
+  - DOMAIN,cdn.jsdelivr.net,DIRECT     #规则文件直连下载
+  - PROCESS-NAME,v2ray,DIRECT
+  - PROCESS-NAME,xray,DIRECT
+  - PROCESS-NAME,naive,DIRECT
+  - PROCESS-NAME,trojan,DIRECT
+  - PROCESS-NAME,trojan-go,DIRECT
+  - PROCESS-NAME,ss-local,DIRECT
+  - PROCESS-NAME,privoxy,DIRECT
+  - PROCESS-NAME,leaf,DIRECT
+  - PROCESS-NAME,v2ray.exe,DIRECT
+  - PROCESS-NAME,xray.exe,DIRECT
+  - PROCESS-NAME,naive.exe,DIRECT
+  - PROCESS-NAME,trojan.exe,DIRECT
+  - PROCESS-NAME,trojan-go.exe,DIRECT
+  - PROCESS-NAME,ss-local.exe,DIRECT
+  - PROCESS-NAME,privoxy.exe,DIRECT
+  - PROCESS-NAME,leaf.exe,DIRECT
+  - PROCESS-NAME,Surge,DIRECT
+  - PROCESS-NAME,Surge 2,DIRECT
+  - PROCESS-NAME,Surge 3,DIRECT
+  - PROCESS-NAME,Surge 4,DIRECT
+  - PROCESS-NAME,Surge%202,DIRECT
+  - PROCESS-NAME,Surge%203,DIRECT
+  - PROCESS-NAME,Surge%204,DIRECT
+  - PROCESS-NAME,Thunder,DIRECT
+  - PROCESS-NAME,DownloadService,DIRECT
+  - PROCESS-NAME,qBittorrent,DIRECT
+  - PROCESS-NAME,Transmission,DIRECT
+  - PROCESS-NAME,fdm,DIRECT
+  - PROCESS-NAME,aria2c,DIRECT
+  - PROCESS-NAME,Folx,DIRECT
+  - PROCESS-NAME,NetTransport,DIRECT
+  - PROCESS-NAME,uTorrent,DIRECT
+  - PROCESS-NAME,WebTorrent,DIRECT
+  - PROCESS-NAME,aria2c.exe,DIRECT
+  - PROCESS-NAME,BitComet.exe,DIRECT
+  - PROCESS-NAME,fdm.exe,DIRECT
+  - PROCESS-NAME,NetTransport.exe,DIRECT
+  - PROCESS-NAME,qbittorrent.exe,DIRECT
+  - PROCESS-NAME,Thunder.exe,DIRECT
+  - PROCESS-NAME,ThunderVIP.exe,DIRECT
+  - PROCESS-NAME,transmission-daemon.exe,DIRECT
+  - PROCESS-NAME,transmission-qt.exe,DIRECT
+  - PROCESS-NAME,uTorrent.exe,DIRECT
+  - PROCESS-NAME,WebTorrent.exe,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,applications,DIRECT
+  - RULE-SET,private,DIRECT
+  - RULE-SET,reject,REJECT
+  - RULE-SET,icloud,DIRECT #
+  - RULE-SET,apple,DIRECT # 这三个为国内可直连地址，如果希望走代理改为🚀 PROXY
+  - RULE-SET,google,DIRECT #
+  - RULE-SET,proxy,🚀 PROXY
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,telegramcidr,🚀 PROXY
+  - GEOIP,LAN,DIRECT,no-resolve
+  - GEOIP,CN,DIRECT,no-resolve
+  - RULE-SET,lancidr,DIRECT
+  - RULE-SET,cncidr,DIRECT
+  - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
 #【Meta专属】逻辑判断规则
 # - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
 # - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
 # - NOT,((DOMAIN,baidu.com)),PROXY                #NOT(否)：域名不为baidu.com访问
-    - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
+  - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
 #域名关键词为bilibili或者douyu的UDP协议
-    - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
-    - MATCH,🚀 PROXY
+  - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+  - MATCH,🚀 PROXY
