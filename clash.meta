@@ -105,8 +105,8 @@ dns:
   # 将国内域名指定为国内 DOH 进行解析，其余 DNS 使用境外 DOH 解析
   nameserver-policy:
     "geosite:cn": [https://doh.pub/dns-query,https://dns.alidns.com/dns-query]
-    #   'www.baidu.com':'114.114.114.114'
-    #   '+.internal.crop.com':'10.0.0.1'
+    #   'www.baidu.com': '114.114.114.114'
+    #   '+.internal.crop.com': '10.0.0.1'
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
