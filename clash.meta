@@ -91,9 +91,8 @@ dns:
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - 114.114.114.114
     - tls://1.12.12.12:853
-    - tls://223.5.5.5:853
+    - tls://223.6.6.6:853
 
   enhanced-mode: redir-host # or fake-ip
   fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
@@ -107,8 +106,8 @@ dns:
     "geosite:cn":
       - https://doh.pub/dns-query
       - https://dns.alidns.com/dns-query
-    #'www.baidu.com': '114.114.114.114'
-    #'+.internal.crop.com': '10.0.0.1'
+    #'www.baidu.com': '8.8.8.8'
+    #'+.internal.crop.com': '1.0.0.1'
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
