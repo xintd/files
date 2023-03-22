@@ -1,6 +1,8 @@
 import tkinter as tk
-import requests
+import tkinter.simpledialog as sd
 from datetime import datetime
+
+import requests
 
 GP_CONFIG_FILE = './.txt'
 TIME_FORMAT = '%H:%M:%S'
@@ -13,12 +15,15 @@ P2_TIME = datetime.strptime('15:00:00', TIME_FORMAT).time()
 
 last_update_time = None
 cached_result = None
+_GP_CODES_CACHE = None
 
 
 def search(gp_dm):
+    if not gp_dm:
+        return ''
     """
-    查询多只股票的实时行情
-    :param gp_dm: 股票代码列表
+    查询多只的实时行情
+    :param gp_dm: 代码列表
     :return: 返回查询结果
     """
     global last_update_time, cached_result
@@ -47,21 +52,20 @@ def add_prefix(code):
     return f'sh{code}' if code.startswith('60') else f'sz{code}' if not ('sh' in code or 'sz' in code) else code
 
 
-def get_gp_codes():
+def get_gp_codes(reload=False):
     """
-    从配置文件中读取股票代码
-    :return: 股票代码列表
+    获取代码列表
+    :param reload: 是否需要重新加载配置文件
     """
-    with open(GP_CONFIG_FILE, 'r') as f:
-        gp_list = [line.strip() for line in f]
+    global _GP_CODES_CACHE
+    if _GP_CODES_CACHE is None or reload:
+        with open(GP_CONFIG_FILE, 'r') as f:
+            gp_list = [line.strip() for line in f]
 
-    # 过滤空行和注释行
-    gp_list = [line for line in gp_list if line and not line.startswith('#')]
-
-    if not gp_list:
-        raise ValueError(f'未在配置文件 "{GP_CONFIG_FILE}" 中找到股票代码')
-
-    return list(map(add_prefix, gp_list))
+        # 过滤空行和注释行
+        gp_list = [line for line in gp_list if line and not line.startswith('#')]
+        _GP_CODES_CACHE = gp_list
+    return list(map(add_prefix, _GP_CODES_CACHE))
 
 
 def is_workday():
@@ -110,28 +114,21 @@ class FloatingWindow:
 
     def start_move(self, event):
         self.toggle_update(False)  # 暂停标签内容更新
-        self.x = event.x
-        self.y = event.y
         self.is_moving = True
+        self.x, self.y = event.x, event.y
 
     def stop_move(self, event):
-        self.x = None
-        self.y = None
         self.is_moving = False
         self.toggle_update(True)  # 恢复标签内容更新
 
     def on_motion(self, event):
-        if not self.is_moving:
-            return
-
-        # 计算窗口的新位置
-        deltax = event.x - self.x
-        deltay = event.y - self.y
-        x = self.rt.winfo_x() + deltax
-        y = self.rt.winfo_y() + deltay
-
-        # 更新窗口位置
-        self.rt.geometry(f"+{x}+{y}")
+        """
+        移动窗口
+        """
+        if self.is_moving:
+            new_x = self.rt.winfo_x() + (event.x - self.x)
+            new_y = self.rt.winfo_y() + (event.y - self.y)
+            self.rt.geometry(f'+{new_x}+{new_y}')
 
     def toggle_update(self, enabled):
         """
@@ -168,22 +165,22 @@ def update_label():
 
     lb.configure(state='disabled')  # 禁用文本框编辑状态
     # 将标识符赋值给类属性
-    FloatingWindow.update_id = root.after(1000, update_label)
+    FloatingWindow.update_id = root.after(800, update_label)
 
 
 def exit_app():
     """
     退出应用程序
     """
-    root.destroy()
+    root.quit()
 
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.overrideredirect(True)  # 无标题栏窗体
-    root.attributes('-alpha', 0.2)
+    root.attributes('-alpha', 0.3)
     width = 150
-    height = 9 + 16 * (len(get_gp_codes()) + 1)
+    height = int(17.3 * (len(get_gp_codes()) + 1))
     # 获取屏幕宽度和高度
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -191,19 +188,86 @@ if __name__ == '__main__':
     x = int(screen_width - width)
     y = int(screen_height - height)
     # 设置窗口位置
-    root.geometry(f'{width}x{height}+0+0')
-    root.geometry("+{}+{}".format(x, y))
+    root.geometry(f'{width}x{height}+{x}+{y}')
     root.attributes("-topmost", 1)
 
     root.wm_attributes("-transparentcolor", "gray")
 
+
+    def update_gp_codes(codes):
+        """
+        更新代码到配置文件
+        :param codes: 代码列表
+        """
+        with open(GP_CONFIG_FILE, 'a') as f:
+            for code in codes:
+                f.write('\n' + code)
+
+
+    def add_stock():
+        """
+        添加股票代码
+        """
+        codes = sd.askstring("添加", "请输入，多个用逗号隔开：")
+        if codes:
+            codes = [code.strip() for code in codes.split(',')]
+            # 检查这些股票代码是否已经存在于配置文件中
+            with open(GP_CONFIG_FILE, 'r') as f:
+                lines = [line.strip() for line in f.readlines()]
+            new_codes = [code for code in codes if code not in lines]
+            if new_codes:
+                update_gp_codes(new_codes)
+                height = int(17.3 * (len(get_gp_codes(True)) + 1))
+                root.geometry(f'{width}x{height}')
+                # 更新标签内容
+                global last_update_time
+                last_update_time = None
+                update_label()
+
+
+    def delete_stock():
+        """
+        删除股票代码
+        """
+        codes = sd.askstring("删除", "请输入，多个用逗号隔开：")
+        if codes:
+            codes = [code.strip() for code in codes.split(',')]
+            with open(GP_CONFIG_FILE, 'r') as f:
+                lines = [line.strip() for line in f.readlines()]
+            # 过滤空行和注释行
+            lines = [line for line in lines if line and not line.startswith('#')]
+            # 删除指定代码
+            deleted_codes = []
+            for code in codes:
+                if code in lines:
+                    lines.remove(code)
+                    deleted_codes.append(code)
+            # 写回到配置文件
+            with open(GP_CONFIG_FILE, 'w') as f:
+                f.write('\n'.join(lines))
+            height = int(17.3 * (len(get_gp_codes(True)) + 1))
+            root.geometry(f'{width}x{height}')
+            # 更新标签内容
+            global last_update_time
+            last_update_time = None
+            update_label()
+
+
     # 添加右键菜单
-    right_click_menu = tk.Menu(root, tearoff=False)
-    right_click_menu.add_command(label="退出", command=exit_app)
+    menu = tk.Menu(root, tearoff=0)
+    menu.add_command(label="增加透明度",
+                     command=lambda: root.attributes("-alpha", min(1, root.attributes('-alpha') + 0.2)))
+    menu.add_command(label="减小透明度",
+                     command=lambda: root.attributes("-alpha", max(0.1, root.attributes('-alpha') - 0.2)))
+    menu.add_separator()
+    menu.add_command(label="添加", command=add_stock)
+    menu.add_command(label="删除", command=delete_stock)
+    menu.add_separator()
+    menu.add_command(label="退出", command=exit_app)
 
 
     def popup(event):
-        right_click_menu.post(event.x_root, event.y_root)
+        menu.post(event.x_root, event.y_root)
 
 
     root.bind("<Button-3>", popup)
