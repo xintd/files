@@ -91,9 +91,8 @@ dns:
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - 114.114.114.114
     - tls://1.12.12.12:853
-    - tls://223.5.5.5:853
+    - tls://223.6.6.6:853
 
   enhanced-mode: redir-host # or fake-ip
   fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
@@ -107,8 +106,8 @@ dns:
     "geosite:cn":
       - https://doh.pub/dns-query
       - https://dns.alidns.com/dns-query
-    #'www.baidu.com': '114.114.114.114'
-    #'+.internal.crop.com': '10.0.0.1'
+    #'www.baidu.com': '8.8.8.8'
+    #'+.internal.crop.com': '1.0.0.1'
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
@@ -149,11 +148,13 @@ proxy-groups:
     #url-test      通过httping URL 自动切换延迟最低的节点
     #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
     #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
-    type: url-test
+    type: fallback
     interval: 300
     url: https://www.google.com/generate_204
     #strategy: round-robin
+    lazy: true           #为true时，未被使用时不进行测ping
     proxies:
+      - wg
       - HK&MO
       - CA&AU
       - SG
@@ -162,7 +163,6 @@ proxy-groups:
       - JP
       - KR
       - ZZ
-      - wg
 
   - name: HK&MO
     type: url-test
