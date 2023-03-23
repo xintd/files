@@ -224,7 +224,8 @@ if __name__ == '__main__':
                 # 更新标签内容
                 global last_update_time
                 last_update_time = None
-                update_label()
+                root.after_cancel(root.floater.update_id)
+                root.floater.update_id = root.after(update_interval, update_label)
 
 
     def delete_stock():
@@ -252,7 +253,8 @@ if __name__ == '__main__':
             # 更新标签内容
             global last_update_time
             last_update_time = None
-            update_label()
+            root.after_cancel(root.floater.update_id)
+            root.floater.update_id = root.after(update_interval, update_label)
 
 
     def update_interval_handler(update_interval_init=800):
