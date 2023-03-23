@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as msgbox
 import tkinter.simpledialog as sd
 from datetime import datetime
 
@@ -16,6 +17,7 @@ P2_TIME = datetime.strptime('15:00:00', TIME_FORMAT).time()
 last_update_time = None
 cached_result = None
 _GP_CODES_CACHE = None
+update_interval = 800
 
 
 def search(gp_dm):
@@ -165,7 +167,7 @@ def update_label():
 
     lb.configure(state='disabled')  # 禁用文本框编辑状态
     # 将标识符赋值给类属性
-    FloatingWindow.update_id = root.after(800, update_label)
+    FloatingWindow.update_id = root.after(update_interval, update_label)
 
 
 def exit_app():
@@ -189,8 +191,8 @@ if __name__ == '__main__':
     y = int(screen_height - height)
     # 设置窗口位置
     root.geometry(f'{width}x{height}+{x}+{y}')
-    root.attributes("-topmost", 1)
 
+    root.attributes("-topmost", True)
     root.wm_attributes("-transparentcolor", "gray")
 
 
@@ -253,8 +255,33 @@ if __name__ == '__main__':
             update_label()
 
 
+    def update_interval_handler(update_interval_init=800):
+        interval = sd.askstring("更新间隔", "请输入更新间隔（毫秒）：", initialvalue=update_interval_init)
+        if interval:
+            try:
+                int(interval)
+            except ValueError:
+                # 如果输入的不是整数，则提示用户重新输入
+                msgbox.showerror("错误", "请输入一个整数")
+            else:
+                if int(interval) < 800:
+                    msgbox.showerror("错误", "更新间隔不能小于800")
+                else:
+                    # 否则更新更新间隔，并重新开始更新标签内容
+                    global update_interval
+                    update_interval = int(interval)
+                    root.after_cancel(root.floater.update_id)
+                    root.floater.update_id = root.after(update_interval, update_label)
+
+
     # 添加右键菜单
     menu = tk.Menu(root, tearoff=0)
+    menu.add_command(label="设置更新间隔", command=lambda: update_interval_handler())
+    topmost_var = tk.BooleanVar(value=True)  # 初始选中置顶
+    menu.add_radiobutton(label="置顶", variable=topmost_var, value=True,
+                         command=lambda: root.attributes("-topmost", True))
+    menu.add_radiobutton(label="取消置顶", variable=topmost_var, value=False,
+                         command=lambda: root.attributes("-topmost", False))
     menu.add_command(label="增加透明度",
                      command=lambda: root.attributes("-alpha", min(1, root.attributes('-alpha') + 0.2)))
     menu.add_command(label="减小透明度",
