@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 import tkinter.messagebox as msgbox
 import tkinter.simpledialog as sd
@@ -262,6 +263,9 @@ def update_interval_handler():
 
 
 if __name__ == '__main__':
+    if not os.path.exists(GP_CONFIG_FILE):
+        open(GP_CONFIG_FILE, 'a').close()
+
     root = tk.Tk()
     root.overrideredirect(True)  # 无标题栏窗体
     root.attributes('-alpha', 0.3)
@@ -305,9 +309,9 @@ if __name__ == '__main__':
 
     root.bind("<Button-3>", popup)
 
-    root.floater = FloatingWindow(root)
     lb = tk.Text(root, font=("微软雅黑", 9))
     lb.pack(fill='both', side='top')
+    root.floater = FloatingWindow(root)
 
     # 启动定时任务，第一次立即执行
     fetch_id = root.after(0, search)
