@@ -16,41 +16,40 @@ update_interval = 800
 
 def search():
     # 取消之前的任务
-    root.after_cancel(fetch_id)
-
-    def _search():
-        if not _GP_CODES_CACHE:
-            root.after(0, update_label, '')
-        else:
-            """
-            查询多只的实时行情
-            :param gp_dm: 代码列表
-            :return: 返回查询结果
-            """
-
-            global last_update_time, cached_result
-            # 如果上次更新时间不为空，并且当前时间与上次更新时间在同一天，
-            # 并且现在不是开市时间，则直接返回缓存的查询结果。
-            if (last_update_time is not None and
-                    last_update_time.date() == datetime.now().date() and
-                    not (is_worktime() and is_workday())):
-                root.after(0, update_label, cached_result)
-            else:
-                codes = ','.join(_GP_CODES_CACHE)
-                url = f'https://qt.gtimg.cn/q={codes}'
-                resp = requests.get(url)
-                rest = [x.strip().split('~') for x in resp.text.split('\n') if x.strip()]
-                res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
-                # 更新上次更新时间和缓存的查询结果。
-                last_update_time = datetime.now()
-                cached_result = res
-                root.after(0, update_label, res)
-        # 继续启动下一个定时任务
-        global fetch_id
-        fetch_id = root.after(update_interval, search)
-
     t = threading.Thread(target=_search)
     t.start()
+
+
+def _search():
+    if not _GP_CODES_CACHE:
+        update_label('')
+    else:
+        """
+        查询多只的实时行情
+        :param gp_dm: 代码列表
+        :return: 返回查询结果
+        """
+        global last_update_time, cached_result
+        # 如果上次更新时间不为空，并且当前时间与上次更新时间在同一天，
+        # 并且现在不是开市时间，则直接返回缓存的查询结果。
+        if (last_update_time is not None and
+                last_update_time.date() == datetime.now().date() and
+                not (worktime and workday)):
+            update_label(cached_result)
+        else:
+            codes = ','.join(_GP_CODES_CACHE)
+            url = f'https://qt.gtimg.cn/q={codes}'
+            resp = requests.get(url)
+            rest = [detail.strip().split('~') for detail in resp.text.split('\n') if detail.strip()]
+            res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
+            # 更新上次更新时间和缓存的查询结果。
+            last_update_time = datetime.now()
+            cached_result = res
+            update_label(res)
+    # 创建定时器
+    timer = threading.Timer(update_interval / 1000, _search)
+    timer.daemon = True  # 设置定时器线程为守护线程
+    timer.start()
 
 
 def add_prefix(code):
@@ -62,8 +61,9 @@ def get_gp_codes(reload=False):
     获取代码列表
     :param reload: 是否需要重新加载配置文件
     """
-    global _GP_CODES_CACHE
+    global _GP_CODES_CACHE, last_update_time
     if reload or not _GP_CODES_CACHE:
+        last_update_time = None
         with open(GP_CONFIG_FILE, 'r') as f:
             gp_list = [line.strip() for line in f]
 
@@ -87,22 +87,28 @@ def is_worktime():
     A1_TIME = datetime.strptime('09:15:00', TIME_FORMAT).time()  # 开市时间
     A2_TIME = datetime.strptime('11:30:00', TIME_FORMAT).time()
     P1_TIME = datetime.strptime('13:00:00', TIME_FORMAT).time()
-    P2_TIME = datetime.strptime('15:00:10', TIME_FORMAT).time()
+    P2_TIME = datetime.strptime('15:00:00', TIME_FORMAT).time()
     """
     检查现在是否是开市时间
     :return: 如果是开市时间返回True，否则返回False
     """
     now = datetime.now().time()
     if now < A1_TIME:
-        return False
+        is_work_time = False
     elif now <= A2_TIME:
-        return True
+        is_work_time = True
     elif now < P1_TIME:
-        return False
+        is_work_time = False
     elif now <= P2_TIME:
-        return True
+        is_work_time = True
     else:
-        return False
+        is_work_time = False
+    # 创建定时器
+    timer = threading.Timer(15, is_worktime)
+    timer.daemon = True  # 设置定时器线程为守护线程
+    timer.start()
+    global worktime
+    worktime = is_work_time
 
 
 class FloatingWindow:
@@ -120,16 +126,13 @@ class FloatingWindow:
         lb.bind("<Motion>", self.on_motion)
 
         self.is_moving = False  # 是否正在移动
-        self.update_enabled = True  # 标签内容更新是否可用
 
     def start_move(self, event):
-        self.toggle_update(False)  # 暂停标签内容更新
         self.is_moving = True
         self.x, self.y = event.x, event.y
 
     def stop_move(self, event):
         self.is_moving = False
-        self.toggle_update(True)  # 恢复标签内容更新
 
     def on_motion(self, event):
         """
@@ -140,41 +143,40 @@ class FloatingWindow:
             new_y = self.rt.winfo_y() + (event.y - self.y)
             self.rt.geometry(f'+{new_x}+{new_y}')
 
-    def toggle_update(self, enabled):
-        """
-        启用或禁用标签内容更新
-        :param enabled: 是否启用
-        """
-        self.update_enabled = enabled
-        global fetch_id
-        if enabled:
-            fetch_id = root.after(0, search)
-        else:
-            root.after_cancel(fetch_id)
-
 
 def update_label(data):
     DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'
-    """
-    更新标签内容
-    """
-    text = f"{datetime.now().date()} 今天休市\n{data}" if not is_workday() else (
-        f"{datetime.now().strftime(DATETIME_FORMAT)}\n{data}" if is_worktime() else
-        f"{datetime.now().date()} 已休市\n{data}"
-    )
 
-    lb.configure(state='normal')  # 激活文本框编辑状态
+    # build the label content with workday/worktime status
+    now = datetime.now()
+    if not workday:
+        text = f"{now.date()} 今天休市\n{data}"
+    elif not worktime:
+        text = f"{now.date()} 已休市\n{data}"
+    else:
+        text = f"{now.strftime(DATETIME_FORMAT)}\n{data}"
+
+    # split data into lines
+    lines = text.strip().split('\n', maxsplit=-1)
+
+    # determine the foreground color for each line
+    fg_colors = []
+    for line in lines:
+        if '[' not in line:
+            fg_colors.append('black')
+        else:
+            change_percent = float(line.split('[')[1].strip()[:-1])
+            fg_color = 'green' if change_percent <= 0 else 'red'
+            fg_colors.append(fg_color)
+
+    # update the label content with selective delete and insert
+    lb.configure(state='normal')
     lb.tag_configure("center", justify="center")
     lb.delete('1.0', tk.END)  # 清空文本框内容
     lb.insert(tk.END, text.strip(), 'center')  # 插入新内容
-
-    # 按行设置文本颜色
-    for i, line in enumerate(text.split('\n')):
-        fg_color = 'red' if ('[' in line and float(line.split('[')[1].strip()[:-1]) > 0) else 'green' if (
-                '[' in line) else 'black'
+    for i in range(len(lines)):
         lb.tag_add(f'tag{i}', f'{i + 1}.0', f'{i + 1}.end')
-        lb.tag_config(f'tag{i}', foreground=fg_color)
-
+        lb.tag_config(f'tag{i}', foreground=fg_colors[i])
     lb.configure(state='disabled')  # 禁用文本框编辑状态
 
 
@@ -208,12 +210,8 @@ def add_stock():
         new_codes = [code for code in codes if code not in lines]
         if new_codes:
             update_gp_codes(new_codes)
-            height = int(17.3 * (len(get_gp_codes(True)) + 1))
-            root.geometry(f'{width}x{height}')
-            # 更新标签内容
-            global fetch_id
-            root.after_cancel(fetch_id)
-            fetch_id = root.after(0, search)
+            height_add = int(17.3 * (len(get_gp_codes(True)) + 1))
+            root.geometry(f'{width}x{height_add}')
 
 
 def delete_stock():
@@ -228,25 +226,19 @@ def delete_stock():
         # 过滤空行和注释行
         lines = [line for line in lines if line and not line.startswith('#')]
         # 删除指定代码
-        deleted_codes = []
         for code in codes:
             if code in lines:
                 lines.remove(code)
-                deleted_codes.append(code)
         # 写回到配置文件
         with open(GP_CONFIG_FILE, 'w') as f:
             f.write('\n'.join(lines))
-        height = int(17.3 * (len(get_gp_codes(True)) + 1))
-        root.geometry(f'{width}x{height}')
-        # 更新标签内容
-        global fetch_id
-        root.after_cancel(fetch_id)
-        fetch_id = root.after(0, search)
+        height_del = int(17.3 * (len(get_gp_codes(True)) + 1))
+        root.geometry(f'{width}x{height_del}')
 
 
 def update_interval_handler():
     global update_interval
-    interval = sd.askstring("更新间隔", "请输入更新间隔（毫秒）：", initialvalue=update_interval)
+    interval = sd.askstring("更新间隔", "请输入更新间隔（毫秒）：", initialvalue=str(update_interval))
     if interval:
         try:
             int(interval)
@@ -314,6 +306,9 @@ if __name__ == '__main__':
     root.floater = FloatingWindow(root)
 
     # 启动定时任务，第一次立即执行
-    fetch_id = root.after(0, search)
+    workday = is_workday()
+    worktime = False
+    is_worktime()
+    search()
 
     root.mainloop()
