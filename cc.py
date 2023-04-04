@@ -1,5 +1,7 @@
 import os
+import sched
 import threading
+import time
 import tkinter as tk
 import tkinter.messagebox as msgbox
 import tkinter.simpledialog as sd
@@ -14,7 +16,7 @@ cached_result = None
 update_interval = 800
 
 
-def _search():
+def _search(s):
     if not _GP_CODES_CACHE:
         update_label('')
     else:
@@ -40,10 +42,7 @@ def _search():
             last_update_time = datetime.now()
             cached_result = res
             update_label(res)
-    # 创建定时器
-    timer_search = threading.Timer(update_interval / 1000, _search)
-    timer_search.daemon = True  # 设置定时器线程为守护线程
-    timer_search.start()
+    s.enter(update_interval / 1000, 9, _search, (s,))
 
 
 def add_prefix(code):
@@ -76,7 +75,7 @@ def is_workday():
     return today < 5
 
 
-def is_worktime():
+def is_worktime(s):
     TIME_FORMAT = '%H:%M:%S'
     A1_TIME = datetime.strptime('09:15:00', TIME_FORMAT).time()  # 开市时间
     A2_TIME = datetime.strptime('11:30:00', TIME_FORMAT).time()
@@ -104,10 +103,7 @@ def is_worktime():
         time_interval = 60 * 60
     global worktime
     worktime = is_work_time
-    # 创建定时器
-    timer = threading.Timer(time_interval, is_worktime)
-    timer.daemon = True  # 设置定时器线程为守护线程
-    timer.start()
+    s.enter(time_interval, 0, is_worktime, (s,))
 
 
 class FloatingWindow:
@@ -307,7 +303,13 @@ if __name__ == '__main__':
     # 启动定时任务，第一次立即执行
     workday = is_workday()
     worktime = False
-    is_worktime()
-    t = threading.Thread(target=_search())
+
+    s = sched.scheduler(time.time, time.sleep)
+    s.enter(0, 0, is_worktime, (s,))
+    s.enter(0, 0, _search, (s,))
+
+    # 在另一个线程中启动服务器并运行 tkinter 主循环
+    t = threading.Thread(target=s.run)
     t.start()
+
     root.mainloop()
