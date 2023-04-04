@@ -1,10 +1,10 @@
 import os
+import threading
 import tkinter as tk
 import tkinter.messagebox as msgbox
 import tkinter.simpledialog as sd
 from datetime import datetime
 
-import threading
 import requests
 
 GP_CONFIG_FILE = './.txt'
@@ -12,12 +12,6 @@ GP_CONFIG_FILE = './.txt'
 last_update_time = None
 cached_result = None
 update_interval = 800
-
-
-def search():
-    # 取消之前的任务
-    t = threading.Thread(target=_search)
-    t.start()
 
 
 def _search():
@@ -40,16 +34,16 @@ def _search():
             codes = ','.join(_GP_CODES_CACHE)
             url = f'https://qt.gtimg.cn/q={codes}'
             resp = requests.get(url)
-            rest = [detail.strip().split('~') for detail in resp.text.split('\n') if detail.strip()]
+            rest = [detail.strip().split('~') for detail in resp.text.splitlines() if detail.strip()]
             res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
             # 更新上次更新时间和缓存的查询结果。
             last_update_time = datetime.now()
             cached_result = res
             update_label(res)
     # 创建定时器
-    timer = threading.Timer(update_interval / 1000, _search)
-    timer.daemon = True  # 设置定时器线程为守护线程
-    timer.start()
+    timer_search = threading.Timer(update_interval / 1000, _search)
+    timer_search.daemon = True  # 设置定时器线程为守护线程
+    timer_search.start()
 
 
 def add_prefix(code):
@@ -95,20 +89,25 @@ def is_worktime():
     now = datetime.now().time()
     if now < A1_TIME:
         is_work_time = False
+        time_interval = 15
     elif now <= A2_TIME:
         is_work_time = True
+        time_interval = 60
     elif now < P1_TIME:
         is_work_time = False
+        time_interval = 15
     elif now <= P2_TIME:
         is_work_time = True
+        time_interval = 60
     else:
         is_work_time = False
-    # 创建定时器
-    timer = threading.Timer(15, is_worktime)
-    timer.daemon = True  # 设置定时器线程为守护线程
-    timer.start()
+        time_interval = 60 * 60
     global worktime
     worktime = is_work_time
+    # 创建定时器
+    timer = threading.Timer(time_interval, is_worktime)
+    timer.daemon = True  # 设置定时器线程为守护线程
+    timer.start()
 
 
 class FloatingWindow:
@@ -157,7 +156,7 @@ def update_label(data):
         text = f"{now.strftime(DATETIME_FORMAT)}\n{data}"
 
     # split data into lines
-    lines = text.strip().split('\n', maxsplit=-1)
+    lines = text.strip().splitlines()
 
     # determine the foreground color for each line
     fg_colors = []
@@ -309,6 +308,6 @@ if __name__ == '__main__':
     workday = is_workday()
     worktime = False
     is_worktime()
-    search()
-
+    t = threading.Thread(target=_search())
+    t.start()
     root.mainloop()
