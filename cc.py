@@ -17,6 +17,7 @@ update_interval = 800
 
 
 def _search(s):
+    last_request_time = time.time()  # 记录上一个请求的执行时间
     if not _GP_CODES_CACHE:
         update_label('')
     else:
@@ -42,7 +43,9 @@ def _search(s):
             last_update_time = datetime.now()
             cached_result = res
             update_label(res)
-    s.enter(update_interval / 1000, 9, _search, (s,))
+    elapsed_time = time.time() - last_request_time
+    remaining_time = max(0.0, update_interval / 1000 - elapsed_time)
+    s.enter(remaining_time, 9, _search, (s,))
 
 
 def add_prefix(code):
