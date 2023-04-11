@@ -5,7 +5,7 @@ import time
 import tkinter as tk
 import tkinter.messagebox as msgbox
 import tkinter.simpledialog as sd
-from datetime import datetime
+from datetime import datetime, date
 
 import requests
 
@@ -79,34 +79,42 @@ def is_workday():
 
 
 def is_worktime(s):
-    TIME_FORMAT = '%H:%M:%S'
-    A1_TIME = datetime.strptime('09:15:00', TIME_FORMAT).time()  # 开市时间
-    A2_TIME = datetime.strptime('11:30:00', TIME_FORMAT).time()
-    P1_TIME = datetime.strptime('13:00:00', TIME_FORMAT).time()
-    P2_TIME = datetime.strptime('15:00:00', TIME_FORMAT).time()
+    time_format = '%H:%M:%S'
+    a1_time = datetime.strptime('09:15:00', time_format).time()  # 开市时间
+    a2_time = datetime.strptime('11:30:00', time_format).time()
+    p1_time = datetime.strptime('13:00:00', time_format).time()
+    p2_time = datetime.strptime('15:00:00', time_format).time()
     """
     检查现在是否是开市时间
     :return: 如果是开市时间返回True，否则返回False
     """
     now = datetime.now().time()
-    if now < A1_TIME:
+    if now < a1_time:
         is_work_time = False
-        time_interval = 15
-    elif now <= A2_TIME:
+        time_interval = max(1, combine(now, a1_time) - 5)
+    elif now <= a2_time:
         is_work_time = True
-        time_interval = 60
-    elif now < P1_TIME:
+        time_interval = combine(now, a2_time) + 5
+    elif now < p1_time:
         is_work_time = False
-        time_interval = 15
-    elif now <= P2_TIME:
+        time_interval = max(1, combine(now, p1_time) - 5)
+    elif now <= p2_time:
         is_work_time = True
-        time_interval = 60
+        time_interval = combine(now, p2_time) + 5
     else:
         is_work_time = False
-        time_interval = 60 * 60
+        max_time = datetime.strptime('23:59:59', time_format).time()
+        time_interval = combine(now, max_time)
     global worktime
     worktime = is_work_time
     s.enter(time_interval, 0, is_worktime, (s,))
+
+
+def combine(now, target_time):
+    now = datetime.combine(date.today(), now)
+    target_time = datetime.combine(date.today(), target_time)
+    diff = target_time - now
+    return int(diff.total_seconds())
 
 
 class FloatingWindow:
@@ -143,7 +151,7 @@ class FloatingWindow:
 
 
 def update_label(data):
-    DATETIME_FORMAT = '%Y/%m/%d %H:%M:%S'
+    datetime_format = '%Y/%m/%d %H:%M:%S'
 
     # build the label content with workday/worktime status
     now = datetime.now()
@@ -152,7 +160,11 @@ def update_label(data):
     elif not worktime:
         text = f"{now.date()} 已休市\n{data}"
     else:
-        text = f"{now.strftime(DATETIME_FORMAT)}\n{data}"
+        text = f"{now.strftime(datetime_format)}\n{data}"
+
+    content = lb.get('1.0', tk.END)
+    if content.strip() and not (workday and worktime):
+        return
 
     # split data into lines
     lines = text.strip().splitlines()
