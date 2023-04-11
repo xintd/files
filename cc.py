@@ -40,9 +40,9 @@ def _search(s):
             rest = [detail.strip().split('~') for detail in resp.text.splitlines() if detail.strip()]
             res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
             # 更新上次更新时间和缓存的查询结果。
+            update_label(res)
             last_update_time = datetime.now()
             cached_result = res
-            update_label(res)
     elapsed_time = time.time() - last_request_time
     remaining_time = max(0.0, update_interval / 1000 - elapsed_time)
     s.enter(remaining_time, 9, _search, (s,))
@@ -163,7 +163,7 @@ def update_label(data):
         text = f"{now.strftime(datetime_format)}\n{data}"
 
     content = lb.get('1.0', tk.END)
-    if '休市' in content.strip():
+    if '休市' in content.strip() and not (workday and worktime) and last_update_time:
         return
 
     # split data into lines
