@@ -91,16 +91,16 @@ def is_worktime(s):
     now = datetime.now().time()
     if now < a1_time:
         is_work_time = False
-        time_interval = max(1, combine(now, a1_time) - 5)
+        time_interval = max(1, combine(now, a1_time) - 10)
     elif now <= a2_time:
         is_work_time = True
-        time_interval = combine(now, a2_time) + 5
+        time_interval = combine(now, a2_time) + 10
     elif now < p1_time:
         is_work_time = False
-        time_interval = max(1, combine(now, p1_time) - 5)
+        time_interval = max(1, combine(now, p1_time) - 10)
     elif now <= p2_time:
         is_work_time = True
-        time_interval = combine(now, p2_time) + 5
+        time_interval = combine(now, p2_time) + 10
     else:
         is_work_time = False
         max_time = datetime.strptime('23:59:59', time_format).time()
@@ -163,7 +163,7 @@ def update_label(data):
         text = f"{now.strftime(datetime_format)}\n{data}"
 
     content = lb.get('1.0', tk.END)
-    if content.strip() and not (workday and worktime):
+    if '休市' in content.strip():
         return
 
     # split data into lines
