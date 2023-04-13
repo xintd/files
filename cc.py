@@ -36,13 +36,17 @@ def _search(s):
         else:
             codes = ','.join(_GP_CODES_CACHE)
             url = f'https://qt.gtimg.cn/q={codes}'
-            resp = requests.get(url)
-            rest = [detail.strip().split('~') for detail in resp.text.splitlines() if detail.strip()]
-            res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
-            # 更新上次更新时间和缓存的查询结果。
-            update_label(res)
-            last_update_time = datetime.now()
-            cached_result = res
+            try:
+                resp = requests.get(url)
+                rest = [detail.strip().split('~') for detail in resp.text.splitlines() if detail.strip()]
+                res = ''.join([f"{i[1]}: {i[3]}[{i[32]}]\n" for i in rest])
+
+                # 更新上次更新时间和缓存的查询结果。
+                update_label(res)
+                last_update_time = datetime.now()
+                cached_result = res
+            except requests.exceptions.RequestException:
+                update_label('网络请求失败，请检查网络连接。')
     elapsed_time = time.time() - last_request_time
     remaining_time = max(0.0, update_interval / 1000 - elapsed_time)
     s.enter(remaining_time, 9, _search, (s,))
