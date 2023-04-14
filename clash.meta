@@ -43,7 +43,7 @@ profile:
   store-fake-ip: true
 
 tun:
-  enable: false
+  enable: true
   stack: system # gvisor / lwip
   dns-hijack:
     - 0.0.0.0:5353 # 需要劫持的 DNS
