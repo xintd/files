@@ -21,10 +21,6 @@ log-level: info # 日志等级 silent/error/warning/info/debug
 
 ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 
-tls:
-  certificate: string # 证书 PEM 格式，或者 证书的路径
-  private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
-
 external-controller: 0.0.0.0:9090 # RESTful API 监听地址
 external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
 # secret: "123456" # `Authorization:Bearer ${secret}`
@@ -51,12 +47,17 @@ tun:
   stack: system # gvisor / lwip
   dns-hijack:
     - 0.0.0.0:5353 # 需要劫持的 DNS
-  auto-detect-interface: true # 自动识别出口网卡
-  auto-route: true # 配置路由表
+
+#ebpf配置
+ebpf:
+  auto-redir: # redirect 模式，仅支持 TCP
+    - eth0
+  redirect-to-tun: # UDP+TCP 使用该功能请勿启用 auto-route
+    - eth0
 
 # 嗅探域名
 sniffer:
-  enable: true
+  enable: false
   ## 对 redir-host 类型识别的流量进行强制嗅探
   ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
   # force-dns-mapping: false
@@ -91,10 +92,10 @@ dns:
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - tls://1.12.12.12:853
-    - tls://223.6.6.6:853
+    - tls://223.6.6.6:853   # DNS over TLS
+    - tls://1.12.12.12:853 # DNS over TLS
 
-  enhanced-mode: redir-host # or fake-ip
+  enhanced-mode: fake-ip # or redir-host
   fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
 
   #use-hosts: true # 查询 hosts
@@ -103,7 +104,7 @@ dns:
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
   # 将国内域名指定为国内 DOH 进行解析，其余 DNS 使用境外 DOH 解析
   nameserver-policy:
-    "geosite:cn":
+    "geosite:cn,private":
       - https://doh.pub/dns-query
       - https://dns.alidns.com/dns-query
     #'www.baidu.com': '8.8.8.8'
@@ -112,14 +113,12 @@ dns:
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
   nameserver:
-    - https://dns.cloudflare.com/dns-query
-    - https://dns.google/dns-query
-    - https://doh.opendns.com/dns-query
-    - https://doh.dns.sb/dns-query
-    - https://[2001:4860:4860::8888]/dns-query
-    - https://[2001:4860:4860::8844]/dns-query
-    - https://[2001:4860:4860::6464]/dns-query
-    - https://[2001:4860:4860::64]/dns-query
+    - https://doh.pub/dns-query # DNS over HTTPS
+    - https://dns.alidns.com/dns-query#h3=true # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
+    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    - dhcp://en0 # dns from dhcp
+    - quic://dns.adguard.com:784 # DNS over QUIC
+    # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
 
 proxies:
   - name: "wg"
@@ -395,11 +394,11 @@ rules:
   - RULE-SET,lancidr,DIRECT
   - RULE-SET,cncidr,DIRECT
   - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
-#【Meta专属】逻辑判断规则
-# - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
-# - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
-# - NOT,((DOMAIN,baidu.com)),PROXY                #NOT(否)：域名不为baidu.com访问
+  #【Meta专属】逻辑判断规则
+  # - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
+  # - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
+  # - NOT,((DOMAIN,baidu.com)),PROXY                #NOT(否)：域名不为baidu.com访问
   - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
-#域名关键词为bilibili或者douyu的UDP协议
+  #域名关键词为bilibili或者douyu的UDP协议
   - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
   - MATCH,🚀 PROXY
