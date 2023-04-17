@@ -1,96 +1,159 @@
-mixed-port: 51168
-allow-lan: false
-mode: rule                          #clash工作模式（rule/global/direct,meta暂不支持script）
-log-level: info                  #日志等级（info/warning/error/debug/silent）
-ipv6: true                          #ip6开关，当为false时，停止解析hostanmes为ip6地址
-external-controller: 127.0.0.1:9090      #控制器监听地址
-profile:                   #缓存设置(文件位置./cache.db)
-  store-selected: false    #节点状态记忆（若不同配置有同代理名称,设置值共享）
-  store-fake-ip: true      #fake-ip缓存
+mixed-port: 8689 # HTTP(S) 和 SOCKS 代理混合端口
 
-#geodata-mode: true         #【Meta专属】使用geoip.dat数据库(默认：false使用mmdb数据库)
-tcp-concurrent: true         #【Meta专属】TCP连接并发，如果域名解析结果对应多个IP，
-                                         # 并发所有IP，选择握手最快的IP进行连接
-# Enable the TUN listener
+allow-lan: true # 允许局域网连接
+bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
+
+#  find-process-mode has 3 values:always, strict, off
+#  - always, 开启，强制匹配所有进程
+#  - strict, 默认，由 clash 判断是否开启
+#  - off, 不匹配进程，推荐在路由器上使用此模式
+find-process-mode: strict
+
+mode: rule
+
+#自定义 geodata url
+geox-url:
+  geoip: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+
+log-level: info # 日志等级 silent/error/warning/info/debug
+
+ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
+
+external-controller: 0.0.0.0:9090 # RESTful API 监听地址
+external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+# secret: "123456" # `Authorization:Bearer ${secret}`
+
+# tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
+
+# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+# 可选： "chrome","firefox","safari","ios","random","none" options.
+# Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
+global-client-fingerprint: chrome
+
+# 类似于 /etc/hosts, 仅支持配置单个 IP
+hosts:
+# '*.clash.dev': 127.0.0.1
+
+profile:
+  # 存储 select 选择记录
+  store-selected: false
+  # 持久化 fake-ip
+  store-fake-ip: true
+
 tun:
   enable: true
-  device: meta
-  stack: system
+  stack: system # gvisor / lwip
   dns-hijack:
-    - '0.0.0.0:53'
-  auto-detect-interface: true
-  auto-route: true # auto set global route
-# port: 7890                 #本地http代理端口
-# socks-port: 7891           #本地socks5代理端口
-# authentication:            # 本地SOCKS5/HTTP(S)代理端口认证设置
-#  - "user1:pass1"
-#  - "user2:pass2"
+    - 0.0.0.0:5353 # 需要劫持的 DNS
 
-sniffer:                         #【Meta专属】sniffer域名嗅探器
-  enable: true                   #嗅探开关
-  sniffing:                      #嗅探协议对象：目前支持tls/http
-    - tls
-    - http
-  skip-domain:                   #列表中的sni字段，保留mapping结果，不通过嗅探还原域名
-                                 #优先级比force-domain高
-    - 'Mijia Cloud'              #米家设备，建议加
-    - 'dlg.io.mi.com'
-    - '+.apple.com'              #苹果域名，建议加
-  # - '*.baidu.com'              #支持通配符
+#ebpf配置
+ebpf:
+  auto-redir: # redirect 模式，仅支持 TCP
+    - eth0
+  redirect-to-tun: # UDP+TCP 使用该功能请勿启用 auto-route
+    - eth0
 
-  force-domain:                  #需要强制嗅探的域名，默认只对IP嗅探
-  # - '+'                        #去掉注释后等于全局嗅探
-    - 'google.com'
+# 嗅探域名
+sniffer:
+  enable: false
+  ## 对 redir-host 类型识别的流量进行强制嗅探
+  ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
+  # force-dns-mapping: false
+  ## 对所有未获取到域名的流量进行强制嗅探
+  # parse-pure-ip: false
+  # 是否使用嗅探结果作为实际访问，默认 true
+  # 全局配置，优先级低于 sniffer.sniff 实际配置
+  override-destination: false
+  sniff:
+    # TLS 默认如果不配置 ports 默认嗅探 443
+    TLS:
+    #  ports: [443, 8443]
+
+    # 默认嗅探 80
+    HTTP:
+      # 需要嗅探的端口
+      ports: [ 80, 8080-8880 ]
+      # 可覆盖 sniffer.override-destination
+      override-destination: true
+  force-domain:
+    - +.v2ex.com
+  ## 对嗅探结果进行跳过
+  # skip-domain:
+  #   - Mijia Cloud
+
 dns:
-  enable: true                 #DNS开关(false/true)
-  listen: 0.0.0.0:53           #DNS监听地址
-  # ipv6: false                #IP6解析开关；如果为false，将返回ip6结果为空
+  enable: true # 关闭将使用系统 DNS
+  prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
+  listen: 0.0.0.0:5353 # 开启 DNS 服务器监听
+  # ipv6: false # false 将返回 AAAA 的空结果
 
-  default-nameserver:          #解析非IP的dns用的dns服务器,只支持纯IP
-    - 114.114.114.114
-    - 8.8.8.8
+  # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
+  # 只能使用纯 IP 地址，可使用加密 DNS
+  default-nameserver:
+    - tls://223.6.6.6:853   # DNS over TLS
+    - tls://1.12.12.12:853 # DNS over TLS
 
-  #nameserver-policy:                #指定域名使用自定义DNS解析
-  # '+.internal.crop.com': '114.114.114.114'
+  enhanced-mode: fake-ip # or redir-host
+  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
 
-  enhanced-mode: redir-host          #DNS模式(redir-host/fake-ip)
-                                                        #【Meta专属】redir-host传递域名，可远程解析
-  fake-ip-range: 198.18.0.1/16       #Fake-IP解析地址池
-  # use-hosts: true                  #查询hosts配置并返回真实IP
+  #use-hosts: true # 查询 hosts
 
-  # fake-ip-filter:                  #Fake-ip过滤，列表中的域名返回真实ip
-  #   - '*.lan'
-  #   - '*.linksys.com'
-  #   - '+.pool.ntp.org'
-  #   - localhost.ptlogin2.qq.com
+  # 配置查询域名使用的 DNS 服务器
+  # nameserver-policy 可以使用 geosite 分流 DNS 解析。
+  # 将国内域名指定为国内 DOH 进行解析，其余 DNS 使用境外 DOH 解析
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://dns.alidns.com/dns-query  # DNS over HTTPS
+      - https://doh.pub/dns-query
+    #'www.baidu.com': '8.8.8.8'
+    #'+.internal.crop.com': '1.0.0.1'
 
-  #proxy-server-nameserver:          #【Meta专属】解析代理服务器域名的dns
-  # - tls://1.0.0.1:853              # 不写时用nameserver解析
+  # DNS 主要域名配置
+  # 支持 UDP，TCP，DoT，DoH，DoQ
+  nameserver:
+    - https://cloudflare-dns.com/dns-query
+    # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
+    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    - dhcp://en0 # dns from dhcp
+    - quic://dns.adguard.com:784 # DNS over QUIC
+    # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
 
-  nameserver:                        #默认DNS服务器，支持udp/tcp/dot/doh/doq
-    - 114.114.114.114
-    - https://doh.pub/dns-query
-    - tls://1.1.1.1:853
+proxies:
+  - name: "wg"
+    type: wireguard
+    server: 162.159.195.3
+    port: 2408
+    ip: 172.16.0.2
+    ipv6: fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5
+    private-key: 3WPccblwgqkK93QCoTRkM6avm7IlGr0xm3GlomZdW08=
+    public-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
+    udp: true
 
 proxy-providers:
   clash:
     type: http
     path: ./proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/alanbobs999/TopFreeProxies/master/Eternity.yaml  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 900
     health-check:
       enable: true
-      url: http://www.apple.com/library/test/success.html
+      url: https://www.google.com/generate_204
       interval: 300
 
 proxy-groups:
   - name: 🚀 PROXY
-    type: load-balance
+    #url-test      通过httping URL 自动切换延迟最低的节点
+    #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
+    #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
+    type: fallback
     interval: 300
-    url: http://www.apple.com/library/test/success.html#
-    strategy: round-robin   #策略：round-robin ：所有请求不使用同一代理
-                            #     consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
+    url: https://www.google.com/generate_204
+    #strategy: round-robin
+    lazy: true           #为true时，未被使用时不进行测ping
     proxies:
+      - wg
       - HK&MO
       - CA&AU
       - SG
@@ -99,11 +162,12 @@ proxy-groups:
       - JP
       - KR
       - ZZ
+
   - name: HK&MO
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(港|HK|Hong|MO|澳门)'
     use:
       - clash
@@ -111,7 +175,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(加拿大|CA|AU|澳大)'
     use:
       - clash
@@ -119,7 +183,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(新加坡|SG)'
     use:
       - clash
@@ -127,7 +191,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(美|US|United States)'
     use:
       - clash
@@ -135,7 +199,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(德|DE|FR|法|NL|FI)'
     use:
       - clash
@@ -143,7 +207,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(日|JP)'
     use:
       - clash
@@ -151,7 +215,7 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
+    url: https://www.google.com/generate_204
     filter: '(?i)(韩|韓|KR)'
     use:
       - clash
@@ -159,102 +223,22 @@ proxy-groups:
     type: url-test
     interval: 300
     tolerance: 100
-    url: http://www.apple.com/library/test/success.html
-    filter: '(?i)^((?!港|HK|Hong|MO|加拿大|CA|新加坡|SG|美|US|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR|AU|澳).)*$'
+    url: https://www.google.com/generate_204
+    exclude-filter: '(?i)(港|HK|Hong|MO|澳门|加拿大|CA|AU|澳大|新加坡|SG|美|US|United States|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR)'
+    use:
+      - clash
+  - name: 🤘 手动选择
+    type: select
     use:
       - clash
 
 rule-providers:
-  reject: # 广告域名列表
-    type: http
+  cn:
     behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
-    path: ./ruleset/reject.yaml
     interval: 86400
-
-  icloud: # iCloud 域名列表
+    path: ./provider/rule-set/cn_domain.yaml
     type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
-    path: ./ruleset/icloud.yaml
-    interval: 86400
-
-  apple: # Apple 在中国大陆可直连的域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
-    path: ./ruleset/apple.yaml
-    interval: 86400
-
-  google: # Google 在中国大陆可直连的域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
-    path: ./ruleset/google.yaml
-    interval: 86400
-
-  proxy: # 代理域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
-    path: ./ruleset/proxy.yaml
-    interval: 86400
-
-  direct: # 直连域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
-    path: ./ruleset/direct.yaml
-    interval: 86400
-
-  private: # 私有网络专用域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
-    path: ./ruleset/private.yaml
-    interval: 86400
-
-  gfw: # GFWList 域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
-    path: ./ruleset/gfw.yaml
-    interval: 86400
-
-  greatfire: # GreatFire 域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/greatfire.txt"
-    path: ./ruleset/greatfire.yaml
-    interval: 86400
-
-  tld-not-cn: # 非中国大陆使用的顶级域名列表
-    type: http
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
-    path: ./ruleset/tld-not-cn.yaml
-    interval: 86400
-
-  telegramcidr: # Telegram 使用的 IP 地址列表
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
-    path: ./ruleset/telegramcidr.yaml
-    interval: 86400
-
-  cncidr: # 中国大陆 IP 地址列表
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
-    path: ./ruleset/cncidr.yaml
-    interval: 86400
-
-  lancidr: # 局域网 IP 及保留 IP 地址列表
-    type: http
-    behavior: ipcidr
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
-    path: ./ruleset/lancidr.yaml
-    interval: 86400
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml"
 
   applications: # 需要直连的常见软件列表
     type: http
@@ -266,71 +250,39 @@ rule-providers:
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - DOMAIN,cdn.jsdelivr.net,DIRECT     #规则文件直连下载
-  - PROCESS-NAME,v2ray,DIRECT
-  - PROCESS-NAME,xray,DIRECT
-  - PROCESS-NAME,naive,DIRECT
-  - PROCESS-NAME,trojan,DIRECT
-  - PROCESS-NAME,trojan-go,DIRECT
-  - PROCESS-NAME,ss-local,DIRECT
-  - PROCESS-NAME,privoxy,DIRECT
-  - PROCESS-NAME,leaf,DIRECT
-  - PROCESS-NAME,v2ray.exe,DIRECT
-  - PROCESS-NAME,xray.exe,DIRECT
-  - PROCESS-NAME,naive.exe,DIRECT
-  - PROCESS-NAME,trojan.exe,DIRECT
-  - PROCESS-NAME,trojan-go.exe,DIRECT
-  - PROCESS-NAME,ss-local.exe,DIRECT
-  - PROCESS-NAME,privoxy.exe,DIRECT
-  - PROCESS-NAME,leaf.exe,DIRECT
-  - PROCESS-NAME,Surge,DIRECT
-  - PROCESS-NAME,Surge 2,DIRECT
-  - PROCESS-NAME,Surge 3,DIRECT
-  - PROCESS-NAME,Surge 4,DIRECT
-  - PROCESS-NAME,Surge%202,DIRECT
-  - PROCESS-NAME,Surge%203,DIRECT
-  - PROCESS-NAME,Surge%204,DIRECT
-  - PROCESS-NAME,Thunder,DIRECT
-  - PROCESS-NAME,DownloadService,DIRECT
-  - PROCESS-NAME,qBittorrent,DIRECT
-  - PROCESS-NAME,Transmission,DIRECT
-  - PROCESS-NAME,fdm,DIRECT
-  - PROCESS-NAME,aria2c,DIRECT
-  - PROCESS-NAME,Folx,DIRECT
-  - PROCESS-NAME,NetTransport,DIRECT
-  - PROCESS-NAME,uTorrent,DIRECT
-  - PROCESS-NAME,WebTorrent,DIRECT
-  - PROCESS-NAME,aria2c.exe,DIRECT
-  - PROCESS-NAME,BitComet.exe,DIRECT
-  - PROCESS-NAME,fdm.exe,DIRECT
-  - PROCESS-NAME,NetTransport.exe,DIRECT
-  - PROCESS-NAME,qbittorrent.exe,DIRECT
-  - PROCESS-NAME,Thunder.exe,DIRECT
-  - PROCESS-NAME,ThunderVIP.exe,DIRECT
-  - PROCESS-NAME,transmission-daemon.exe,DIRECT
-  - PROCESS-NAME,transmission-qt.exe,DIRECT
-  - PROCESS-NAME,uTorrent.exe,DIRECT
-  - PROCESS-NAME,WebTorrent.exe,DIRECT
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN,yacd.haishan.me,DIRECT
   - RULE-SET,applications,DIRECT
-  - RULE-SET,private,DIRECT
-  - RULE-SET,reject,REJECT
-  - RULE-SET,icloud,DIRECT #
-  - RULE-SET,apple,DIRECT # 这三个为国内可直连地址，如果希望走代理改为🚀 PROXY
-  - RULE-SET,google,DIRECT #
-  - RULE-SET,proxy,🚀 PROXY
-  - RULE-SET,direct,DIRECT
-  - RULE-SET,telegramcidr,🚀 PROXY
-  - GEOIP,LAN,DIRECT,no-resolve
-  - GEOIP,CN,DIRECT,no-resolve
-  - RULE-SET,lancidr,DIRECT
-  - RULE-SET,cncidr,DIRECT
+  - RULE-SET,cn,DIRECT
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,private,DIRECT
+  - GEOSITE,youtube,🚀 PROXY
+  - GEOSITE,google,🚀 PROXY
+  - GEOSITE,twitter,🚀 PROXY
+  - GEOSITE,pixiv,🚀 PROXY
+  - GEOSITE,category-scholar-!cn,🚀 PROXY
+  - GEOSITE,biliintl,🚀 PROXY
+  - GEOSITE,onedrive,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,category-games@cn,DIRECT
+  - GEOSITE,geolocation-!cn,🚀 PROXY
+  - GEOSITE,cn,DIRECT
+  #GEOIP规则
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,telegram,🚀 PROXY
+  - GEOIP,JP,🚀 PROXY
+  - GEOIP,CN,DIRECT
+  - DST-PORT,80/8080/443/8443,🚀 PROXY
+
   - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
-#【Meta专属】逻辑判断规则
- # - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
- # - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
- # - NOT,((DOMAIN,baidu.com)),PROXY                #NOT(否)：域名不为baidu.com访问
+  #【Meta专属】逻辑判断规则
+  # - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
+  # - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
+  # - NOT,((DOMAIN,baidu.com)),🚀 PROXY                #NOT(否)：域名不为baidu.com访问
   - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
   #域名关键词为bilibili或者douyu的UDP协议
   - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+
   - MATCH,🚀 PROXY
