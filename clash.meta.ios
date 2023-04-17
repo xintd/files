@@ -50,7 +50,7 @@ tun:
 
 # 嗅探域名
 sniffer:
-  enable: false
+  enable: true
   ## 对 redir-host 类型识别的流量进行强制嗅探
   ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
   # force-dns-mapping: false
