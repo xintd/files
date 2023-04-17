@@ -44,16 +44,9 @@ profile:
 
 tun:
   enable: true
-  stack: system # gvisor / lwip
+  stack: gvisor # gvisor / lwip
   dns-hijack:
     - 0.0.0.0:5353 # 需要劫持的 DNS
-
-#ebpf配置
-ebpf:
-  auto-redir: # redirect 模式，仅支持 TCP
-    - eth0
-  redirect-to-tun: # UDP+TCP 使用该功能请勿启用 auto-route
-    - eth0
 
 # 嗅探域名
 sniffer:
@@ -127,7 +120,7 @@ proxies:
     port: 2408
     ip: 172.16.0.2
     ipv6: fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5
-    private-key: nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=
+    private-key: vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=
     public-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
     udp: true
 
@@ -240,18 +233,10 @@ rule-providers:
     type: http
     url: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
 
-  applications: # 需要直连的常见软件列表
-    type: http
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
-    path: ./ruleset/applications.yaml
-    interval: 86400
-
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN,yacd.haishan.me,DIRECT
-  - RULE-SET,applications,DIRECT
   - RULE-SET,cn,DIRECT
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,private,DIRECT
@@ -283,4 +268,5 @@ rules:
   - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
   #域名关键词为bilibili或者douyu的UDP协议
   - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+
   - MATCH,🚀 PROXY
