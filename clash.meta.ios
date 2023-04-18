@@ -237,14 +237,17 @@ rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,applications,DIRECT
   - RULE-SET,cn,DIRECT
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,private,DIRECT
-  - GEOSITE,youtube,🚀 PROXY
+  - GEOSITE,youtube,US
   - GEOSITE,google,🚀 PROXY
   - GEOSITE,twitter,🚀 PROXY
   - GEOSITE,pixiv,🚀 PROXY
   - GEOSITE,category-scholar-!cn,🚀 PROXY
+  - GEOSITE,openai,ZZ
+  - GEOSITE,netflix,US
   - GEOSITE,biliintl,🚀 PROXY
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT

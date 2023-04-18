@@ -255,11 +255,13 @@ rules:
   - RULE-SET,cn,DIRECT
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,private,DIRECT
-  - GEOSITE,youtube,🚀 PROXY
+  - GEOSITE,youtube,US
   - GEOSITE,google,🚀 PROXY
   - GEOSITE,twitter,🚀 PROXY
   - GEOSITE,pixiv,🚀 PROXY
   - GEOSITE,category-scholar-!cn,🚀 PROXY
+  - GEOSITE,openai,ZZ
+  - GEOSITE,netflix,US
   - GEOSITE,biliintl,🚀 PROXY
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT
