@@ -44,7 +44,7 @@ echo       ===========================================
 echo.
 echo             M.clash.meta
 echo.
-echo             P.clash.premium
+rem echo             P.clash.premium
 echo.
 echo             W.WireGuard
 echo.
@@ -59,7 +59,7 @@ if /i "%clashchoice%"=="M" (
     set "exeURL=https://github.com/MetaCubeX/Clash.Meta/releases/latest"
     goto clash_start
 )
-if /i "%clashchoice%"=="P" (
+if /i "%clashchoice%"=="m" (
     set "exeName=clash-windows-amd64.exe"
     set "clashconfig=https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/files/main/clash.premium"
     set "exeURL=https://release.dreamacro.workers.dev/latest/"
