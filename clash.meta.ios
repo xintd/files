@@ -246,7 +246,7 @@ rules:
   - GEOSITE,twitter,🚀 PROXY
   - GEOSITE,pixiv,🚀 PROXY
   - GEOSITE,category-scholar-!cn,🚀 PROXY
-  - GEOSITE,openai,ZZ
+  - GEOSITE,openai,US
   - GEOSITE,netflix,US
   - GEOSITE,biliintl,🚀 PROXY
   - GEOSITE,onedrive,DIRECT
