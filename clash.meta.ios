@@ -147,7 +147,7 @@ proxy-groups:
     lazy: true           #为true时，未被使用时不进行测ping
     proxies:
       - wg
-      - HK&MO
+      - HK&MO&TW
       - CA&AU
       - SG
       - US
@@ -156,12 +156,12 @@ proxy-groups:
       - KR
       - ZZ
 
-  - name: HK&MO
+  - name: HK&MO&TW
     type: url-test
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(港|HK|Hong|MO|澳门)'
+    filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK)'
     use:
       - clash
   - name: CA&AU
@@ -169,7 +169,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(加拿大|CA|AU|澳大)'
+    filter: '(?i)(加拿大|🇨🇦|🇦🇺|澳大|CA|AU)'
     use:
       - clash
   - name: SG
@@ -177,7 +177,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(新加坡|SG)'
+    filter: '(?i)(新加坡|🇸🇬|SG)'
     use:
       - clash
   - name: US
@@ -185,7 +185,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(美|US|United States)'
+    filter: '(?i)(美|🇺🇸|United States|US)'
     use:
       - clash
   - name: Europe
@@ -193,7 +193,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(德|DE|FR|法|NL|FI)'
+    filter: '(?i)(德|🇩🇪|🇫🇷|法|🇳🇱|🇫🇮|DE|FR|NL|FI)'
     use:
       - clash
   - name: JP
@@ -201,7 +201,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(日|JP)'
+    filter: '(?i)(日|🇯🇵|JP)'
     use:
       - clash
   - name: KR
@@ -209,7 +209,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(韩|韓|KR)'
+    filter: '(?i)(韩|韓|🇰🇷|KR)'
     use:
       - clash
   - name: ZZ
@@ -217,7 +217,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    exclude-filter: '(?i)(港|HK|Hong|MO|澳门|加拿大|CA|AU|澳大|新加坡|SG|美|US|United States|德|DE|FR|法|NL|FI|日|JP|韩|韓|KR)'
+    exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
       - clash
   - name: 🤘 手动选择
@@ -225,20 +225,8 @@ proxy-groups:
     use:
       - clash
 
-rule-providers:
-  cn:
-    behavior: domain
-    interval: 86400
-    path: ./provider/rule-set/cn_domain.yaml
-    type: http
-    url: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
-
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
-  - DOMAIN,clash.razord.top,DIRECT
-  - DOMAIN,yacd.haishan.me,DIRECT
-  - RULE-SET,applications,DIRECT
-  - RULE-SET,cn,DIRECT
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,private,DIRECT
   - GEOSITE,youtube,US
