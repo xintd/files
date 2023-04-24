@@ -254,33 +254,34 @@ rule-providers:
 
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
-  - DOMAIN,clash.razord.top,DIRECT
-  - DOMAIN,yacd.haishan.me,DIRECT
   - RULE-SET,applications,DIRECT
-  - RULE-SET,cn,DIRECT
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,private,DIRECT
   - GEOSITE,youtube,US
   - GEOSITE,google,🚀 PROXY
-  - GEOSITE,twitter,🚀 PROXY
-  - GEOSITE,pixiv,🚀 PROXY
+  - GEOSITE,twitter,US
+  - GEOSITE,pixiv,US
   - GEOSITE,category-scholar-!cn,🚀 PROXY
+  - GEOSITE,bing,US
   - GEOSITE,openai,US
   - GEOSITE,netflix,US
-  - GEOSITE,biliintl,🚀 PROXY
+  - GEOSITE,biliintl,US
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,geolocation-!cn,🚀 PROXY
-  - GEOSITE,cn,DIRECT
+
   #GEOIP规则
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,telegram,🚀 PROXY
   - GEOIP,JP,🚀 PROXY
-  - GEOIP,CN,DIRECT
   - DST-PORT,80/8080/443/8443,🚀 PROXY
+
+  - RULE-SET,cn,DIRECT
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT
 
   - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
   #【Meta专属】逻辑判断规则
@@ -290,4 +291,5 @@ rules:
   - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
   #域名关键词为bilibili或者douyu的UDP协议
   - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+
   - MATCH,🚀 PROXY

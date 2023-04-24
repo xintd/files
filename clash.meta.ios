@@ -236,33 +236,27 @@ rules:
   - GEOSITE,private,DIRECT
   - GEOSITE,youtube,US
   - GEOSITE,google,🚀 PROXY
-  - GEOSITE,twitter,🚀 PROXY
-  - GEOSITE,pixiv,🚀 PROXY
+  - GEOSITE,twitter,US
+  - GEOSITE,pixiv,US
   - GEOSITE,category-scholar-!cn,🚀 PROXY
+  - GEOSITE,bing,US
   - GEOSITE,openai,US
   - GEOSITE,netflix,US
-  - GEOSITE,biliintl,🚀 PROXY
+  - GEOSITE,biliintl,US
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,geolocation-!cn,🚀 PROXY
-  - GEOSITE,cn,DIRECT
   #GEOIP规则
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,telegram,🚀 PROXY
   - GEOIP,JP,🚀 PROXY
-  - GEOIP,CN,DIRECT
   - DST-PORT,80/8080/443/8443,🚀 PROXY
-
-  - DOMAIN-SUFFIX,bilibili.com,DIRECT,tcp   #【Meta专属】可指定协议类型(tcp/udp)
-  #【Meta专属】逻辑判断规则
-  # - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT #AND(和):域名为baidu.com的UDP协议
-  # - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT  #OR(或):UDP的协议，或者域名为baidu.com
-  # - NOT,((DOMAIN,baidu.com)),🚀 PROXY                #NOT(否)：域名不为baidu.com访问
-  - OR,((DOMAIN,live.yj1211.work),(DOMAIN-KEYWORD,555dy)),DIRECT
-  #域名关键词为bilibili或者douyu的UDP协议
-  - AND,((OR,((DOMAIN-KEYWORD,bilibili),(DOMAIN-KEYWORD,douyu))),(NETWORK,UDP)),REJECT
+  # CN
+  - RULE-SET,cn,DIRECT
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT
 
   - MATCH,🚀 PROXY
