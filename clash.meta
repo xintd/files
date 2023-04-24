@@ -87,7 +87,14 @@ dns:
   enable: true # 关闭将使用系统 DNS
   prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
   listen: 0.0.0.0:5353 # 开启 DNS 服务器监听
-  # ipv6: false # false 将返回 AAAA 的空结果
+  ipv6: true # false 将返回 AAAA 的空结果
+
+  enhanced-mode: fake-ip # or redir-host
+  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
+  fake-ip-filter:
+    - '*'
+    - '+.lan'
+  #use-hosts: true # 查询 hosts
 
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
@@ -95,10 +102,19 @@ dns:
     - tls://223.6.6.6:853   # DNS over TLS
     - tls://1.12.12.12:853 # DNS over TLS
 
-  enhanced-mode: fake-ip # or redir-host
-  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
-
-  #use-hosts: true # 查询 hosts
+  # DNS 主要域名配置
+  # 支持 UDP，TCP，DoT，DoH，DoQ
+  nameserver:
+    - 'tls://1.0.0.1#dns'
+    - https://cloudflare-dns.com/dns-query
+    # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
+    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    - dhcp://en0 # dns from dhcp
+    - quic://dns.adguard.com:784 # DNS over QUIC
+    # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
+  # nameserver过代理
+  proxy-server-nameserver :
+    - https://dns.alidns.com/dns-query
 
   # 配置查询域名使用的 DNS 服务器
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
@@ -108,17 +124,6 @@ dns:
       - https://dns.alidns.com/dns-query  # DNS over HTTPS
       - https://doh.pub/dns-query
     #'www.baidu.com': '8.8.8.8'
-    #'+.internal.crop.com': '1.0.0.1'
-
-  # DNS 主要域名配置
-  # 支持 UDP，TCP，DoT，DoH，DoQ
-  nameserver:
-    - https://cloudflare-dns.com/dns-query
-    # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
-    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
-    - dhcp://en0 # dns from dhcp
-    - quic://dns.adguard.com:784 # DNS over QUIC
-    # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
 
 proxies:
   - name: "wg"
