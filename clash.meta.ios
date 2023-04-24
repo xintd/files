@@ -46,7 +46,8 @@ tun:
   enable: true
   stack: gvisor # gvisor / lwip
   dns-hijack:
-    - 0.0.0.0:5353 # 需要劫持的 DNS
+    - any:1053 # 需要劫持的 DNS
+  auto-route: true
 
 # 嗅探域名
 sniffer:
@@ -79,7 +80,7 @@ sniffer:
 dns:
   enable: true # 关闭将使用系统 DNS
   prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
-  listen: 0.0.0.0:5353 # 开启 DNS 服务器监听
+  listen: :1053 # 开启 DNS 服务器监听
   ipv6: true # false 将返回 AAAA 的空结果
 
   enhanced-mode: fake-ip # or redir-host
@@ -92,16 +93,14 @@ dns:
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - tls://223.6.6.6:853   # DNS over TLS
-    - tls://1.12.12.12:853 # DNS over TLS
+    - tls://1.0.0.1:853   # DNS over TLS
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
   nameserver:
-    - 'tls://1.0.0.1#🚀 PROXY'
-    - https://cloudflare-dns.com/dns-query
+    - https://cloudflare-dns.com/dns-query#🚀 PROXY
     # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
-    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    - https://mozilla.cloudflare-dns.com/dns-query#🚀 PROXY&h3=true # 指定策略组和使用 HTTP/3
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
@@ -186,7 +185,7 @@ proxy-groups:
     use:
       - clash
   - name: US
-    type: url-test
+    type: load-balance
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
@@ -233,7 +232,7 @@ proxy-groups:
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - GEOSITE,category-ads-all,REJECT
-  - GEOSITE,private,DIRECT
+  - GEOSITE,private,DIRECT,no-resolve
   - GEOSITE,youtube,US
   - GEOSITE,google,🚀 PROXY
   - GEOSITE,twitter,US
@@ -253,10 +252,11 @@ rules:
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,telegram,🚀 PROXY
   - GEOIP,JP,🚀 PROXY
-  - DST-PORT,80/8080/443/8443,🚀 PROXY
   # CN
   - RULE-SET,cn,DIRECT
   - GEOSITE,cn,DIRECT
   - GEOIP,CN,DIRECT
+
+  - DST-PORT,80/8080/443/8443,🚀 PROXY
 
   - MATCH,🚀 PROXY
