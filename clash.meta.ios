@@ -104,9 +104,9 @@ dns:
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
-  # nameserver过代理
+  # 代理服务器解析DNS:当proxy里的server为域名时，使用该列表里的dns服务器解析
   proxy-server-nameserver :
-    - https://dns.alidns.com/dns-query
+    - tls://1.0.0.1:853
 
   # 配置查询域名使用的 DNS 服务器
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
