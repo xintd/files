@@ -93,7 +93,8 @@ dns:
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - tls://1.0.0.1:853   # DNS over TLS
+    - 223.6.6.6
+    - tls://223.6.6.6:853   # DNS over TLS
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
@@ -106,7 +107,7 @@ dns:
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
   # 代理服务器解析DNS:当proxy里的server为域名时，使用该列表里的dns服务器解析
   proxy-server-nameserver :
-    - tls://1.0.0.1:853
+    - https://dns.alidns.com/dns-query
 
   # 配置查询域名使用的 DNS 服务器
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
