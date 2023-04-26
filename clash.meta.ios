@@ -128,6 +128,8 @@ proxies:
     private-key: vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=
     public-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
     udp: true
+  - {"type":"vmess","name":"uoldsix_vmess","server":"v2ay.uoldsix.repl.co","port":"443","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","alterId":"0","cipher":"auto","network":"ws","tls":true,"ws-opts":{"path":"/vm","headers":{"host":"v2ay.uoldsix.repl.co"}}}
+  - {"type":"vless","name":"uoldsix_vless","server":"v2ay.uoldsix.repl.co","port":443,"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"v2ay.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"v2ay.uoldsix.repl.co"}}}
 
 proxy-providers:
   clash:
@@ -142,25 +144,34 @@ proxy-providers:
 
 proxy-groups:
   - name: 🚀 PROXY
-    #url-test      通过httping URL 自动切换延迟最低的节点
-    #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
-    #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
     type: fallback
     interval: 300
     url: https://www.google.com/generate_204
-    #strategy: round-robin
-    lazy: true           #为true时，未被使用时不进行测ping
     proxies:
       - wg
-      - HK&MO&TW
-      - CA&AU
-      - SG
+      - other
+
+  - name: "other"
+    type: load-balance
+    strategy: round-robin
+    proxies:
       - US
       - Europe
+      - CA&AU
+      - ZZ
       - JP
       - KR
-      - ZZ
+      - SG
+      - HK&MO&TW
+      - uos
 
+  - name: "uos"
+    type: url-test
+    tolerance: 100
+    url: https://www.google.com/generate_204
+    proxies:
+      - uoldsix_vmess
+      - uoldsix_vless
   - name: HK&MO&TW
     type: url-test
     interval: 300
@@ -186,7 +197,7 @@ proxy-groups:
     use:
       - clash
   - name: US
-    type: load-balance
+    type: url-test
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
@@ -231,33 +242,27 @@ proxy-groups:
       - clash
 
 rules:
-  - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - GEOSITE,category-ads-all,REJECT
+  - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
+  # 直连
   - GEOSITE,private,DIRECT,no-resolve
-  - GEOSITE,youtube,US
-  - GEOSITE,google,🚀 PROXY
-  - GEOSITE,twitter,US
-  - GEOSITE,pixiv,US
-  - GEOSITE,category-scholar-!cn,🚀 PROXY
-  - GEOSITE,bing,US
-  - GEOSITE,openai,US
-  - GEOSITE,netflix,US
-  - GEOSITE,biliintl,US
+  - GEOIP,private,DIRECT,no-resolve
+  - RULE-SET,cn,DIRECT
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
-  - GEOSITE,geolocation-!cn,🚀 PROXY
-  #GEOIP规则
-  - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,telegram,🚀 PROXY
-  - GEOIP,JP,🚀 PROXY
-  # CN
-  - RULE-SET,cn,DIRECT
-  - GEOSITE,cn,DIRECT
-  - GEOIP,CN,DIRECT
 
-  - DST-PORT,80/8080/443/8443,🚀 PROXY
+  - GEOSITE,youtube,other
+  - GEOSITE,google,other
+  - GEOSITE,twitter,other
+  - GEOSITE,pixiv,other
+  - GEOSITE,bing,other
+  - GEOSITE,openai,other
+  - GEOSITE,netflix,other
+  - GEOSITE,biliintl,other
 
   - MATCH,🚀 PROXY
