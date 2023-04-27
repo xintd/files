@@ -134,7 +134,7 @@ proxy-providers:
     type: http
     path: ./proxies/clash.yaml
     url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
-    interval: 900
+    interval: 3600
     health-check:
       enable: true
       url: https://www.google.com/generate_204
@@ -146,14 +146,25 @@ proxy-groups:
     #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
     #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
     type: load-balance
-    interval: 300
     url: https://www.google.com/generate_204
-    #strategy: round-robin
-    lazy: true           #为true时，未被使用时不进行测ping
+    strategy: round-robin
     proxies:
       - wg
+      - relay
+
+  - name: "relay"
+    type: relay
+    proxies:
+      - uos
       - other
 
+  - name: "uos"
+    type: url-test
+    tolerance: 100
+    url: https://www.google.com/generate_204
+    proxies:
+      - uoldsix_vmess
+      - uoldsix_vless
   - name: "other"
     type: load-balance
     strategy: round-robin
@@ -166,15 +177,6 @@ proxy-groups:
       - KR
       - SG
       - HK&MO&TW
-      - uos
-
-  - name: "uos"
-    type: url-test
-    tolerance: 100
-    url: https://www.google.com/generate_204
-    proxies:
-      - uoldsix_vmess
-      - uoldsix_vless
   - name: HK&MO&TW
     type: url-test
     interval: 300
@@ -251,7 +253,6 @@ rule-providers:
     path: ./provider/rule-set/cn_domain.yaml
     type: http
     url: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
-
   applications: # 需要直连的常见软件列表
     type: http
     behavior: classical
@@ -262,11 +263,11 @@ rule-providers:
 rules:
   - GEOSITE,category-ads-all,REJECT
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
-
-# 直连
-  - RULE-SET,applications,DIRECT
+  - GEOSITE,bing,relay
+  # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
+  - RULE-SET,applications,DIRECT
   - RULE-SET,cn,DIRECT
   - GEOSITE,cn,DIRECT
   - GEOIP,CN,DIRECT
@@ -276,13 +277,12 @@ rules:
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
 
-  - GEOSITE,youtube,other
-  - GEOSITE,google,other
-  - GEOSITE,twitter,other
-  - GEOSITE,pixiv,other
-  - GEOSITE,bing,other
-  - GEOSITE,openai,other
-  - GEOSITE,netflix,other
-  - GEOSITE,biliintl,other
+  - GEOSITE,youtube,relay
+  - GEOSITE,google,relay
+  - GEOSITE,twitter,relay
+  - GEOSITE,pixiv,relay
+  - GEOSITE,openai,relay
+  - GEOSITE,netflix,relay
+  - GEOSITE,biliintl,relay
 
   - MATCH,🚀 PROXY
