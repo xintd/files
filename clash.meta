@@ -3,10 +3,6 @@ mixed-port: 8689 # HTTP(S) 和 SOCKS 代理混合端口
 allow-lan: true # 允许局域网连接
 bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
 
-#  find-process-mode has 3 values:always, strict, off
-#  - always, 开启，强制匹配所有进程
-#  - strict, 默认，由 clash 判断是否开启
-#  - off, 不匹配进程，推荐在路由器上使用此模式
 find-process-mode: strict
 
 #自定义 geodata url
@@ -126,8 +122,11 @@ proxies:
     private-key: nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=
     public-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
     udp: true
-  - {"type":"vmess","name":"uoldsix_vmess","server":"v2ay.uoldsix.repl.co","port":"443","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","alterId":"0","cipher":"auto","network":"ws","tls":true,"ws-opts":{"path":"/vm","headers":{"host":"v2ay.uoldsix.repl.co"}}}
-  - {"type":"vless","name":"uoldsix_vless","server":"v2ay.uoldsix.repl.co","port":443,"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"v2ay.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"v2ay.uoldsix.repl.co"}}}
+  - {"type":"vmess","name":"vs_outlook_vm","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","ws-opts":{"path":"/vm","headers":{"host":"vs.uoldsix.repl.co"}},"server":"vs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true}
+  - {"type":"vless","name":"vs_outlook_vl","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","server":"vs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"vs.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"vs.uoldsix.repl.co"}}}
+  - {"type":"vmess","name":"xs_outlook_vm","uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","ws-opts":{"path":"/vm?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"server":"xs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true}
+  - {"type":"vless","name":"xs_outlook_vl","uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","server":"xs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"xs.uoldsix.repl.co","ws-opts":{"path":"/vl?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}}}
+  - {"type":"trojan","name":"xs_outlook_tr","password":"0c7821b4-cf14-478e-96f3-fad1c03be56e","server":"xs.uoldsix.repl.co","port":443,"udp":true,"skip-cert-verify":true,"network":"ws","ws-opts":{"path":"/tr","headers":{"host":"xs.uoldsix.repl.co"}}}
 
 proxy-providers:
   clash:
@@ -137,17 +136,15 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://www.google.com/generate_204
+      url: https://g.alicdn.com
       interval: 300
 
 proxy-groups:
   - name: 🚀 PROXY
-    #url-test      通过httping URL 自动切换延迟最低的节点
-    #load-balance  strategy策略：round-robin 所有请求不使用同一代理；consistent-hashing：同一有效顶级域名(eTLD)使用同一代理
-    #fallback      通过httping URL，当没有ping值时，自动切换下一个节点
     type: load-balance
     url: https://www.google.com/generate_204
     strategy: round-robin
+    interval: 300
     proxies:
       - wg
       - relay
@@ -155,19 +152,23 @@ proxy-groups:
   - name: "relay"
     type: relay
     proxies:
-      - uos
+      - replit
       - other
 
-  - name: "uos"
+  - name: "replit"
     type: url-test
     tolerance: 100
     url: https://www.google.com/generate_204
     proxies:
-      - uoldsix_vmess
-      - uoldsix_vless
+      - vs_outlook_vl
+      - vs_outlook_vm
+      - xs_outlook_vm
+      - xs_outlook_vl
+      - xs_outlook_tr
   - name: "other"
     type: load-balance
-    strategy: round-robin
+    interval: 300
+    url: https://www.google.com/generate_204
     proxies:
       - US
       - Europe
@@ -284,5 +285,4 @@ rules:
   - GEOSITE,openai,relay
   - GEOSITE,netflix,relay
   - GEOSITE,biliintl,relay
-
   - MATCH,🚀 PROXY
