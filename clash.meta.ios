@@ -9,7 +9,6 @@ mode: rule
 
 #自定义 geodata url
 geox-url:
-  geoip: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
   geosite: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
   mmdb: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
 
@@ -248,21 +247,10 @@ rules:
   - GEOSITE,bing,relay
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
-  - GEOIP,private,DIRECT,no-resolve
   - GEOSITE,cn,DIRECT
-  - GEOIP,CN,DIRECT
   - GEOSITE,onedrive,DIRECT
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,apple-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
-
-  - GEOSITE,youtube,relay
-  - GEOSITE,google,relay
-  - GEOSITE,twitter,relay
-  - GEOSITE,pixiv,relay
-  - GEOSITE,openai,relay
-  - GEOSITE,netflix,relay
-  - GEOSITE,biliintl,relay
-
   - MATCH,🚀 PROXY
