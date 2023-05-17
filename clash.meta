@@ -141,13 +141,12 @@ proxy-providers:
 
 proxy-groups:
   - name: 🚀 PROXY
-    type: load-balance
+    type: fallback
     url: https://www.google.com/generate_204
-    strategy: round-robin
     interval: 300
     proxies:
-      - wg
       - relay
+      - wg
 
   - name: "relay"
     type: relay
@@ -157,7 +156,7 @@ proxy-groups:
 
   - name: "replit"
     type: url-test
-    tolerance: 100
+    interval: 300
     url: https://www.google.com/generate_204
     proxies:
       - vs_outlook_vl
@@ -166,7 +165,7 @@ proxy-groups:
       - xs_outlook_vl
       - xs_outlook_tr
   - name: "other"
-    type: load-balance
+    type: url-test
     interval: 300
     url: https://www.google.com/generate_204
     proxies:
@@ -178,6 +177,7 @@ proxy-groups:
       - KR
       - SG
       - HK&MO&TW
+
   - name: HK&MO&TW
     type: url-test
     interval: 300
