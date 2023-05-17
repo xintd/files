@@ -92,9 +92,9 @@ dns:
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
   nameserver:
-    - https://cloudflare-dns.com/dns-query#🚀 PROXY
+    - https://cloudflare-dns.com/dns-query#replit
     # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
-    - https://mozilla.cloudflare-dns.com/dns-query#🚀 PROXY&h3=true # 指定策略组和使用 HTTP/3
+    - https://mozilla.cloudflare-dns.com/dns-query#replit&h3=true # 指定策略组和使用 HTTP/3
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
   proxy-server-nameserver :
