@@ -37,7 +37,7 @@ profile:
 
 tun:
   enable: true
-  stack: gvisor # gvisor / lwip
+  stack: system # gvisor / lwip
   dns-hijack:
     - any:1053 # 需要劫持的 DNS
   auto-route: true
@@ -236,14 +236,10 @@ proxy-groups:
     exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
       - clash
-  - name: 🤘 手动选择
-    type: select
-    use:
-      - clash
 
 rules:
-  - GEOSITE,category-ads-all,REJECT
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
+  - GEOSITE,category-ads-all,REJECT
   - GEOSITE,bing,relay
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
