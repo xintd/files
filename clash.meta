@@ -261,7 +261,7 @@ rule-providers:
 rules:
   - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
   - GEOSITE,category-ads-all,REJECT
-  - GEOSITE,bing,relay
+  - GEOSITE,bing,other
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
