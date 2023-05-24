@@ -228,8 +228,8 @@ rules:
   - GEOSITE,category-games@cn,DIRECT
 
   - GEOSITE,openai,US
-  - GEOSITE,google,🚀 PROXY
   - GEOSITE,youtube,🚀 PROXY
+  - GEOSITE,google,🚀 PROXY
   - GEOSITE,twitter,🚀 PROXY
   - GEOSITE,pixiv,🚀 PROXY
   - GEOSITE,netflix,🚀 PROXY
