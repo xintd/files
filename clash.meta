@@ -257,7 +257,7 @@ rules:
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
 
-  - GEOSITE,openai,us
+  - GEOSITE,openai,US
   - GEOSITE,google,🚀 PROXY
   - GEOSITE,youtube,🚀 PROXY
   - GEOSITE,twitter,🚀 PROXY
