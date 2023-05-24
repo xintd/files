@@ -1,16 +1,14 @@
 mixed-port: 8689 # HTTP(S) 和 SOCKS 代理混合端口
 
-allow-lan: false # 允许局域网连接
+allow-lan: true # 允许局域网连接
 bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
 
 find-process-mode: strict
 
-mode: rule
-
 #自定义 geodata url
 geox-url:
-  geosite: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://raw.gfile.ga/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+  geosite: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
 
 log-level: info # 日志等级 silent/error/warning/info/debug
 
@@ -19,17 +17,7 @@ ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS
 external-controller: 0.0.0.0:9090 # RESTful API 监听地址
 external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
 # secret: "123456" # `Authorization:Bearer ${secret}`
-
-# tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
-
-# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
-# 可选： "chrome","firefox","safari","ios","random","none" options.
-# Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
 global-client-fingerprint: chrome
-
-# 类似于 /etc/hosts, 仅支持配置单个 IP
-hosts:
-# '*.clash.dev': 127.0.0.1
 
 profile:
   store-selected: false
@@ -107,31 +95,24 @@ dns:
     #'www.baidu.com': '8.8.8.8'
 
 proxies:
-  - name: "wg"
-    type: wireguard
-    server: 162.159.195.3
-    port: 2408
-    ip: 172.16.0.2
-    ipv6: fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5
-    private-key: vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=
-    public-key: bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
-    udp: true
-  - {"type":"vmess","name":"vs_outlook_vm","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","ws-opts":{"path":"/vm","headers":{"host":"vs.uoldsix.repl.co"}},"server":"vs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true}
-  - {"type":"vless","name":"vs_outlook_vl","uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","server":"vs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"vs.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"vs.uoldsix.repl.co"}}}
-  - {"type":"vmess","name":"xs_outlook_vm","uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","ws-opts":{"path":"/vm?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"server":"xs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true}
-  - {"type":"vless","name":"xs_outlook_vl","uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","server":"xs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"xs.uoldsix.repl.co","ws-opts":{"path":"/vl?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}}}
-  - {"type":"trojan","name":"xs_outlook_tr","password":"0c7821b4-cf14-478e-96f3-fad1c03be56e","server":"xs.uoldsix.repl.co","port":443,"udp":true,"skip-cert-verify":true,"network":"ws","ws-opts":{"path":"/tr","headers":{"host":"xs.uoldsix.repl.co"}}}
+  - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.3","port":2408,"ip":"172.16.0.2","ipv6":"fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
+  - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vmess","name":"vs_outlook_vm","ws-opts":{"path":"/vm","headers":{"host":"vs.uoldsix.repl.co"}},"server":"vs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
+  - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vless","name":"vs_outlook_vl","server":"vs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"vs.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"vs.uoldsix.repl.co"}},"dialer-proxy":"wg"}
+  - {"uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","type":"vmess","name":"xs_outlook_vm","ws-opts":{"path":"/vm?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"server":"xs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
+  - {"uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","type":"vless","name":"xs_outlook_vl","server":"xs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"xs.uoldsix.repl.co","ws-opts":{"path":"/vl?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"dialer-proxy":"wg"}
+  - {"password":"0c7821b4-cf14-478e-96f3-fad1c03be56e","type":"trojan","name":"xs_outlook_tr","server":"xs.uoldsix.repl.co","port":443,"udp":true,"skip-cert-verify":true,"network":"ws","ws-opts":{"path":"/tr","headers":{"host":"xs.uoldsix.repl.co"}},"dialer-proxy":"wg"}
 
 proxy-providers:
   clash:
     type: http
     path: ./proxies/clash.yaml
-    url: https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/Clash.Meta/node/Eternity  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 3600
     health-check:
       enable: true
       url: https://g.alicdn.com
       interval: 300
+    dialer-proxy: wg
 
 proxy-groups:
   - name: 🚀 PROXY
@@ -139,14 +120,9 @@ proxy-groups:
     url: https://www.google.com/generate_204
     interval: 300
     proxies:
-      - relay
-      - wg
-
-  - name: "relay"
-    type: relay
-    proxies:
       - other
       - replit
+      - wg
 
   - name: "replit"
     type: url-test
@@ -158,6 +134,7 @@ proxy-groups:
       - xs_outlook_vm
       - xs_outlook_vl
       - xs_outlook_tr
+
   - name: "other"
     type: url-test
     interval: 300
@@ -177,7 +154,7 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK)'
+    filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾)'
     use:
       - clash
   - name: CA&AU
@@ -233,12 +210,12 @@ proxy-groups:
     interval: 300
     tolerance: 100
     url: https://www.google.com/generate_204
-    exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
+    exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
       - clash
 
 rules:
-  - DOMAIN,raw.gfile.ga,DIRECT     #订阅文件直连下载
+  - DOMAIN,xintd.tk,DIRECT     #订阅文件直连下载
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,bing,other
   # 直连
@@ -249,4 +226,13 @@ rules:
   - GEOSITE,apple-cn,DIRECT
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
+
+  - GEOSITE,openai,US
+  - GEOSITE,google,🚀 PROXY
+  - GEOSITE,youtube,🚀 PROXY
+  - GEOSITE,twitter,🚀 PROXY
+  - GEOSITE,pixiv,🚀 PROXY
+  - GEOSITE,netflix,🚀 PROXY
+  - GEOSITE,biliintl,🚀 PROXY
+
   - MATCH,🚀 PROXY
