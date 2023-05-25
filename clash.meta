@@ -6,10 +6,10 @@ bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表�
 find-process-mode: strict
 
 #自定义 geodata url
+geodata-mode: true
 geox-url:
   geoip: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
   geosite: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
 
 log-level: info # 日志等级 silent/error/warning/info/debug
 
@@ -122,7 +122,7 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://g.alicdn.com
+      url: https://www.google.com/generate_204
       interval: 300
     dialer-proxy: wg
 

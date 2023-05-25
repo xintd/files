@@ -110,7 +110,7 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://g.alicdn.com
+      url: https://www.google.com/generate_204
       interval: 300
     dialer-proxy: wg
 
