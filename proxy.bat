@@ -87,7 +87,8 @@ goto clash_start
 echo 下载配置文件
 setlocal enabledelayedexpansion
 if exist %USERPROFILE%\.config\clash\config.yaml (
-    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件,meta内核切换premium必须使用远程配置文件覆盖（Y是，N否(默认)）："
+rem    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件,meta内核切换premium必须使用远程配置文件覆盖（Y是，N否(默认)）："
+    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件（Y是，N否(默认)）："
     IF NOT "!configfile!"=="" SET configfile=!configfile:~0,1!
     if /i "!configfile!"=="Y" goto existYes
     goto existNo
