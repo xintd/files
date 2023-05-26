@@ -1,6 +1,6 @@
 mixed-port: 8689 # HTTP(S) 和 SOCKS 代理混合端口
 
-allow-lan: true # 允许局域网连接
+allow-lan: false # 允许局域网连接
 bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
 
 find-process-mode: strict
