@@ -5,13 +5,13 @@ bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表�
 
 find-process-mode: strict
 
+log-level: info # 日志等级 silent/error/warning/info/debug
+
 #自定义 geodata url
 geodata-mode: true
 geox-url:
   geoip: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
   geosite: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-
-log-level: info # 日志等级 silent/error/warning/info/debug
 
 ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 
@@ -87,9 +87,9 @@ dns:
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
   nameserver:
-    - https://cloudflare-dns.com/dns-query#replit
+    - https://cloudflare-dns.com/dns-query#wg
     # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
-    - https://mozilla.cloudflare-dns.com/dns-query#replit&h3=true # 指定策略组和使用 HTTP/3
+    - https://mozilla.cloudflare-dns.com/dns-query#wg&h3=true # 指定策略组和使用 HTTP/3
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
@@ -222,14 +222,14 @@ rule-providers:
   cn:
     behavior: domain
     interval: 86400
-    path: ./provider/rule-set/cn_domain.yaml
+    path: ./rule-set/cn_domain.yaml
     type: http
     url: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
   applications: # 需要直连的常见软件列表
     type: http
     behavior: classical
     url: "https://xintd.tk/Loyalsoldier/clash-rules/raw/release/applications.txt"
-    path: ./ruleset/applications.yaml
+    path: ./rule-set/applications.yaml
     interval: 86400
 
 rules:
