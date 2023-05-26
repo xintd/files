@@ -30,8 +30,7 @@ tun:
     - any:1053 # 需要劫持的 DNS
   auto-route: true
 
-# 嗅探域名
-sniffer:
+sniffer:  # 嗅探域名
   enable: true
   ## 对 redir-host 类型识别的流量进行强制嗅探
   ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
@@ -136,8 +135,9 @@ proxy-groups:
       - xs_outlook_tr
 
   - name: "other"
-    type: url-test
+    type: load-balance
     interval: 300
+    strategy: round-robin
     url: https://www.google.com/generate_204
     proxies:
       - US
@@ -152,7 +152,6 @@ proxy-groups:
   - name: HK&MO&TW
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾)'
     use:
@@ -160,7 +159,6 @@ proxy-groups:
   - name: CA&AU
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(加拿大|🇨🇦|🇦🇺|澳大|CA|AU)'
     use:
@@ -168,7 +166,6 @@ proxy-groups:
   - name: SG
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(新加坡|🇸🇬|SG)'
     use:
@@ -176,7 +173,6 @@ proxy-groups:
   - name: US
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(美|🇺🇸|United States|US)'
     use:
@@ -184,7 +180,6 @@ proxy-groups:
   - name: Europe
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(德|🇩🇪|🇫🇷|法|🇳🇱|🇫🇮|DE|FR|NL|FI)'
     use:
@@ -192,7 +187,6 @@ proxy-groups:
   - name: JP
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(日|🇯🇵|JP)'
     use:
@@ -200,7 +194,6 @@ proxy-groups:
   - name: KR
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     filter: '(?i)(韩|韓|🇰🇷|KR)'
     use:
@@ -208,7 +201,6 @@ proxy-groups:
   - name: ZZ
     type: url-test
     interval: 300
-    tolerance: 100
     url: https://www.google.com/generate_204
     exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
