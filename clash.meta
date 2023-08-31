@@ -124,8 +124,23 @@ proxy-providers:
       url: https://www.google.com/generate_204
       interval: 300
     dialer-proxy: wg
+  NeteaseMusic:
+    type: http
+    path: ./proxies/NeteaseMusic.yaml
+    url: https://xintd.tk/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/Proxy/NeteaseMusic.yaml
+    interval: 3600
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
 
 proxy-groups:
+  - name: 🎵 网易云音乐
+    type: select
+    filter: '(?i)(解锁)'
+    use:
+      - NeteaseMusic
+
   - name: 🚀 PROXY
     type: fallback
     url: https://www.google.com/generate_204
@@ -231,9 +246,22 @@ rule-providers:
     url: "https://xintd.tk/Loyalsoldier/clash-rules/raw/release/applications.txt"
     path: ./rule-set/applications.yaml
     interval: 86400
+  NeteaseMusic:
+    type: http
+    behavior: classical
+    path: ./rule-set/NeteaseMusic.yaml
+    url: "https://xintd.tk/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/RuleSet/NeteaseMusic.yaml"
+    interval: 86400
 
 rules:
   - DOMAIN,xintd.tk,DIRECT     #订阅文件直连下载
+  # Netease Music Advertising
+  - DOMAIN,admusicpic.music.126.net,REJECT
+  - DOMAIN,iadmat.nosdn.127.net,REJECT
+  - DOMAIN,iadmusicmat.music.126.net,REJECT
+  - DOMAIN,iadmusicmatvideo.music.126.net,REJECT
+  - RULE-SET,NeteaseMusic,🎵 网易云音乐
+
   - GEOSITE,category-ads-all,REJECT
   - GEOSITE,bing,other
   # 直连
@@ -249,7 +277,7 @@ rules:
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
 
-  - GEOSITE,openai,other
+  - GEOSITE,openai,replit
   - GEOSITE,youtube,🚀 PROXY
   - GEOSITE,google,🚀 PROXY
   - GEOSITE,twitter,🚀 PROXY
