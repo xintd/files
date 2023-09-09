@@ -1,7 +1,7 @@
 {
   "log": {
     "disabled": false,
-    "level": "error",
+    "level": "info",
     "timestamp": true
   },
   "dns": {
@@ -16,7 +16,7 @@
       },
       {
         "tag": "dns-direct",
-        "address": "https://dns.alidns.com/dns-query",
+        "address": "https://1.0.0.1/dns-query",
         "address_resolver": "dns-local",
         "address_strategy": "ipv4_only",
         "strategy": "ipv4_only",
@@ -198,10 +198,6 @@
       "tag": "direct"
     },
     {
-      "type": "direct",
-      "tag": "bypass"
-    },
-    {
       "type": "block",
       "tag": "block"
     },
@@ -234,7 +230,7 @@
       },
       {
         "geosite": "private",
-        "outbound": "bypass"
+        "outbound": "direct"
       },
       {
         "network": "udp",
@@ -257,7 +253,7 @@
           "cn",
           "private"
         ],
-        "outbound": "bypass"
+        "outbound": "direct"
       }
     ],
     "final": "🚀 PROXY",
