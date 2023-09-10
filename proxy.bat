@@ -32,8 +32,8 @@ if /i "%choice%"=="Q" goto endd
 echo 选择无效，请重新输入
 echo.
 goto loop_start
-::====================================================================================
 
+::==============================set_proxy======================================================
 :set_proxy
 echo.
 echo.
@@ -42,11 +42,11 @@ echo       ===========================================
 echo             选择想要运行的代理软件
 echo       ===========================================
 echo.
-echo             M.clash.meta
+echo             M.  clash.meta
 echo.
-rem echo             P.clash.premium
+echo             S.   sing-box
 echo.
-echo             W.WireGuard
+echo             W.  WireGuard
 echo.
 echo.
 echo.
@@ -54,16 +54,16 @@ echo.
 set /p clashchoice=    请选择：
 IF NOT "%clashchoice%"=="" SET clashchoice=%clashchoice:~0,1%
 if /i "%clashchoice%"=="M" (
-    set "exeName=Clash.Meta-windows-amd64-compatible.exe"
-    set "clashconfig=https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/files/main/clash.meta"
+    set "exeName=Clash.Meta-windows-amd64.exe"
+    set "clashconfig=https://raw.githubusercontent.com/xintd/files/main/clash.meta"
     set "exeURL=https://github.com/MetaCubeX/Clash.Meta/releases/latest"
     goto clash_start
 )
-if /i "%clashchoice%"=="m" (
-    set "exeName=clash-windows-amd64.exe"
-    set "clashconfig=https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/files/main/clash.premium"
-    set "exeURL=https://release.dreamacro.workers.dev/latest/"
-    goto clash_start
+if /i "%clashchoice%"=="S" (
+    set "exeName=sing-box.exe"
+    set "singboxconfig=https://raw.githubusercontent.com/xintd/files/main/config.json"
+    set "exeURL=https://github.com/xintd/sing-box/releases/latest"
+    goto singbox_start
 )
 if /i "%clashchoice%"=="W" (
     set exeName="C:\Program Files\WireGuard\wireguard.exe"
@@ -71,15 +71,15 @@ if /i "%clashchoice%"=="W" (
 )
 echo 选择无效，请重新输入
 goto loop_clash
-::====================================================================================
 
+::=================================clash===================================================
 :clash_start
 if exist %exeName% goto clashBegin
 echo.
 echo.      %exeName%文件不存在,请先下载文件
 echo.      访问%exeURL%地址下载最新文件
 echo.      下载完记得解压文件至当前目录
-echo.      运行界面  https://clash.razord.top 或者  https://yacd.haishan.me/
+echo.      运行界面  https://yacd.metacubex.one/
 echo.
 pause
 goto clash_start
@@ -87,8 +87,7 @@ goto clash_start
 echo 下载配置文件
 setlocal enabledelayedexpansion
 if exist %USERPROFILE%\.config\clash\config.yaml (
-rem    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件,meta内核切换premium必须使用远程配置文件覆盖（Y是，N否(默认)）："
-    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件（Y是，N否(默认)）："
+    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件,meta内核切换premium必须使用远程配置文件覆盖（Y是，N否(默认)）："
     IF NOT "!configfile!"=="" SET configfile=!configfile:~0,1!
     if /i "!configfile!"=="Y" goto existYes
     goto existNo
@@ -121,14 +120,68 @@ echo.
 rem if "%1" == "h" goto begin
 :clash
 for /f "delims=" %%i in ('dir /b *clash*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
+for /f "delims=" %%i in ('dir /b *sing-box*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
 mshta vbscript:createobject("wscript.shell").run("%~nx0 :: h %exeName%",0)(window.close)&&exit
 :begin
 %3
 goto endd
-::====================================================================================
 
+::============================singbox========================================================
+:singbox_start
+if exist %exeName% goto singboxBegin
+echo.
+echo.      %exeName%文件不存在,请先下载文件
+echo.      访问%exeURL%地址下载最新文件
+echo.      下载完记得解压文件至当前目录
+echo.      运行界面  https://yacd.metacubex.one/
+echo.
+pause
+goto singbox_start
+:singboxBegin
+echo 下载配置文件
+setlocal enabledelayedexpansion
+if exist .\config.json (
+    set /p configfile=   "是否使用远程配置文件覆盖本地配置文件（Y是，N否(默认)）："
+    IF NOT "!configfile!"=="" SET configfile=!configfile:~0,1!
+    if /i "!configfile!"=="Y" goto existYes
+    goto existNo
+)
+:existYes
+:: 使用powershell附带的curl命令
+REM  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
+powershell curl -o ".\config.json" "%singboxconfig%"
+:existNo
+for /f "tokens=1,2,* " %%i in ('REG QUERY "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable ^| find /i "ProxyEnable"') do (set /A ProxyEnableValue=%%k)
+if NOT %ProxyEnableValue% equ 0 goto singbox
+echo 关闭自动检测设置
+REM reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000030000000100 /f
+
+echo 正在设置代理服务器……
+REM reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
+REM reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /d "127.0.0.1:8689" /f
+REM reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyOverride /t REG_SZ /d "localhost;127.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;172.32.*;192.168.*;<local>" /f
+
+rem “对于本地地址不使用代理服务器”这个勾，不会勾选上
+::reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyOverride /t REG_SZ /d "11.*;68.*;10.*;" /f
+rem “对于本地地址不使用代理服务器”这个勾，会勾选上 ,  值加了<local>
+::reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyOverride /t REG_SZ /d "11.*;68.*;10.*;<local>" /f
+echo.
+echo *****设置成功！代理服务器设置完毕
+echo.
+::后台启动singbox
+rem if "%1" == "h" goto begin
+:singbox
+for /f "delims=" %%i in ('dir /b *clash*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
+for /f "delims=" %%i in ('dir /b *sing-box*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
+mshta vbscript:createobject("wscript.shell").run("%exeName% run",0)(window.close)&&exit
+:begin
+%3
+goto endd
+
+::============================reset_proxy========================================================
 :reset_proxy
 for /f "delims=" %%i in ('dir /b *clash*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
+for /f "delims=" %%i in ('dir /b *sing-box*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
 for /f "tokens=1,2,* " %%i in ('REG QUERY "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable ^| find /i "ProxyEnable"') do (set /A ProxyEnableValue=%%k)
 if %ProxyEnableValue% equ 0 goto end
 echo 设置自动检测配置
@@ -144,8 +197,8 @@ echo.
 echo *****设置成功！代理已经恢复
 echo.
 goto endd
-::====================================================================================
 
+::===============================wireguard=====================================================
 :wireguard_start
 if exist %exeName% goto wireguard_begin
 echo.
@@ -160,7 +213,7 @@ if not exist %exeName% goto wireguard_start
 rem 判断是否开启Wireguard的Pre/Post命令支持，只能通过修改注册表的方式开启
 REG QUERY HKLM\Software\WireGuard /v DangerousScriptExecution>nul 2>nul&&goto downloadBatFiles
 reg add HKLM\Software\WireGuard /v DangerousScriptExecution /t REG_DWORD /d 1 /f
-powershell (new-object Net.WebClient).DownloadFile('https://raw.gfile.ga/https://raw.githubusercontent.com/xintd/files/main/zero-profile.conf','C:\Program Files\WireGuard\zero-profile.conf')
+powershell (new-object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/xintd/files/main/zero-profile.conf','C:\Program Files\WireGuard\zero-profile.conf')
 :downloadBatFiles
 if not exist "C:\Program Files\WireGuard\bat\config.yml" goto batfiles
 set monthday=%date:~0,4%%date:~5,2%01
@@ -170,7 +223,7 @@ if %filedate% geq %monthday% goto WireGuard
 :batfiles
 echo       ------https://github.com/lmc999/auto-add-routes
 echo       ------下载国内外分流脚本
-powershell (new-object Net.WebClient).DownloadFile('https://raw.gfile.ga/https://github.com/lmc999/auto-add-routes/raw/master/zip/wireguard.zip','wireguard.zip')
+powershell (new-object Net.WebClient).DownloadFile('https://github.com/lmc999/auto-add-routes/raw/master/zip/wireguard.zip','wireguard.zip')
 powershell Expand-Archive wireguard.zip .
 powershell rm -r -force 'wireguard.zip'
 echo       ------
@@ -181,9 +234,11 @@ powershell mv wireguard 'C:\Program Files\WireGuard\bat'
 :WireGuard
 echo       ------
 echo       ------启动wireguard
+for /f "delims=" %%i in ('dir /b *clash*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
+for /f "delims=" %%i in ('dir /b *sing-box*.exe') do taskkill /f /im %%i>nul 2>nul 1>nul
 %exeName%
-::====================================================================================
 
+::===============================endd=====================================================
 :endd
 REM get cmd pid
 set TempFile=%TEMP%\sthUnique.tmp
