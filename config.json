@@ -16,7 +16,7 @@
       },
       {
         "tag": "dns-direct",
-        "address": "https://1.0.0.1/dns-query",
+        "address": "https://doh.pub/dns-query",
         "address_resolver": "dns-local",
         "address_strategy": "ipv4_only",
         "strategy": "ipv4_only",
@@ -86,14 +86,6 @@
       "domain_strategy": "ipv4_only"
     },
     {
-      "type": "direct",
-      "tag": "dns-in",
-      "listen": "127.0.0.1",
-      "listen_port": 6450,
-      "override_address": "8.8.8.8",
-      "override_port": 53
-    },
-    {
       "type": "tun",
       "tag": "tun-in",
       "mtu": 9000,
@@ -136,7 +128,8 @@
         "auto",
         "wireguard-cf"
       ]
-    },{
+    },
+    {
       "type": "loadbalance",
       "tag": "loadbalance",
       "providers": [
@@ -163,7 +156,8 @@
           "3000ms"
         ]
       }
-    },{
+    },
+    {
       "tag": "auto",
       "type": "urltest",
       "outbounds": [
@@ -174,7 +168,8 @@
       "url": "http://www.gstatic.com/generate_204",
       "interval": "1m",
       "tolerance": 50
-    },{
+    },
+    {
       "type": "wireguard",
       "tag": "wireguard-cf",
       "server": "162.159.195.3",
