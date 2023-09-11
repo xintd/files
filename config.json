@@ -123,7 +123,8 @@
       "exclude": "",
       "include": "",
       "download_detour": "direct",
-      "cache_file": "provider.txt"
+      "cache_file": "provider.txt",
+      "detour": "wireguard-cf"
     }
   ],
   "outbounds": [
@@ -174,63 +175,63 @@
       "interval": "1m",
       "tolerance": 50
     },{
-        "type": "wireguard",
-        "tag": "wireguard-cf",
-        "server": "162.159.195.3",
-        "server_port": 2408,
-        "local_address": [
-            "172.16.0.2/32",
-            "fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5/128"
-        ],
-        "private_key": "nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=",
-        "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-        "mtu": 1280
+      "type": "wireguard",
+      "tag": "wireguard-cf",
+      "server": "162.159.195.3",
+      "server_port": 2408,
+      "local_address": [
+        "172.16.0.2/32",
+        "fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5/128"
+      ],
+      "private_key": "nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=",
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "mtu": 1280
     },
     {
-        "tag": "vs_outlook_vm",
-        "type": "vmess",
-        "server": "vs.uoldsix.repl.co",
-        "server_port": 443,
-        "uuid": "bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1",
-        "security": "auto",
-        "alter_Id": 0,
-        "tls": {
-            "enabled": true
-        },
-        "transport": {
-            "type": "ws",
-            "path": "/vm"
-        }
+      "tag": "vs_outlook_vm",
+      "type": "vmess",
+      "server": "vs.uoldsix.repl.co",
+      "server_port": 443,
+      "uuid": "bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1",
+      "security": "auto",
+      "alter_Id": 0,
+      "tls": {
+        "enabled": true
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/vm"
+      }
     },
     {
-        "tag": "xs_outlook_vm",
-        "type": "vmess",
-        "server": "xs.uoldsix.repl.co",
-        "server_port": 443,
-        "uuid": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
-        "security": "auto",
-        "alter_Id": 0,
-        "tls": {
-            "enabled": true
-        },
-        "transport": {
-            "type": "ws",
-            "path": "/vm"
-        }
+      "tag": "xs_outlook_vm",
+      "type": "vmess",
+      "server": "xs.uoldsix.repl.co",
+      "server_port": 443,
+      "uuid": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
+      "security": "auto",
+      "alter_Id": 0,
+      "tls": {
+        "enabled": true
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/vm"
+      }
     },
     {
-        "tag": "xs_outlook_tr",
-        "type": "trojan",
-        "server": "xs.uoldsix.repl.co",
-        "server_port": 443,
-        "password": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
-        "tls": {
-            "enabled": true
-        },
-        "transport": {
-            "type": "ws",
-            "path": "/tr"
-        }
+      "tag": "xs_outlook_tr",
+      "type": "trojan",
+      "server": "xs.uoldsix.repl.co",
+      "server_port": 443,
+      "password": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
+      "tls": {
+        "enabled": true
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/tr"
+      }
     },
     {
       "type": "direct",
@@ -268,10 +269,6 @@
         "outbound": "dns-out"
       },
       {
-        "geosite": "private",
-        "outbound": "direct"
-      },
-      {
         "network": "udp",
         "port": 443,
         "outbound": "block"
@@ -282,17 +279,21 @@
       },
       {
         "geosite": [
+          "private",
           "category-games@cn",
           "cn"
         ],
-        "outbound": "direct"
-      },
-      {
         "geoip": [
           "cn",
           "private"
         ],
         "outbound": "direct"
+      },
+      {
+        "geosite": [
+          "openai"
+        ],
+        "outbound": "auto"
       }
     ],
     "final": "🚀 PROXY",
