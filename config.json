@@ -10,16 +10,14 @@
         "tag": "dns-remote",
         "address": "https://dns.google/dns-query",
         "address_resolver": "dns-direct",
-        "address_strategy": "ipv4_only",
-        "strategy": "ipv4_only",
+        "address_strategy": "prefer_ipv4",
         "detour": "wireguard-cf"
       },
       {
         "tag": "dns-direct",
         "address": "https://doh.pub/dns-query",
         "address_resolver": "dns-local",
-        "address_strategy": "ipv4_only",
-        "strategy": "ipv4_only",
+        "address_strategy": "prefer_ipv4",
         "detour": "direct"
       },
       {
@@ -34,7 +32,7 @@
       {
         "tag": "dns-fake",
         "address": "fakeip",
-        "strategy": "ipv4_only"
+        "strategy": "prefer_ipv4"
       }
     ],
     "rules": [
@@ -72,7 +70,7 @@
       "inet4_range": "198.18.0.0/15",
       "inet6_range": "fc00::/18"
     },
-    "strategy": "ipv4_only",
+    "strategy": "prefer_ipv4",
     "independent_cache": true
   },
   "inbounds": [
@@ -83,7 +81,7 @@
       "listen_port": 8689,
       "sniff": true,
       "sniff_override_destination": false,
-      "domain_strategy": "ipv4_only"
+      "domain_strategy": "prefer_ipv4"
     },
     {
       "type": "tun",
@@ -104,7 +102,7 @@
       },
       "sniff": true,
       "sniff_override_destination": false,
-      "domain_strategy": "ipv4_only"
+      "domain_strategy": "prefer_ipv4"
     }
   ],
   "providers": [
