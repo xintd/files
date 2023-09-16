@@ -241,12 +241,12 @@
   ],
   "route": {
     "geoip": {
-      "download_url": "https://github.com/soffchen/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "🚀 PROXY"
+      "download_url": "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.db",
+      "download_detour": "direct"
     },
     "geosite": {
-      "download_url": "https://github.com/soffchen/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "🚀 PROXY"
+      "download_url": "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db",
+      "download_detour": "direct"
     },
     "rules": [
       {
@@ -273,12 +273,16 @@
       {
         "geosite": [
           "private",
+          "cn",
           "category-games@cn",
-          "cn"
+          "microsoft@cn",
+          "apple-cn",
+          "steam@cn",
+          "onedrive"
         ],
         "geoip": [
-          "cn",
-          "private"
+          "private",
+          "cn"
         ],
         "outbound": "direct"
       },
@@ -296,7 +300,7 @@
     "clash_api": {
       "external_controller": "127.0.0.1:9090",
       "external_ui": "clash_ui",
-      "external_ui_download_detour": "🚀 PROXY",
+      "external_ui_download_detour": "direct",
       "default_mode": "rule",
       "store_fakeip": true,
       "cache_file": "cache.db"
