@@ -15,14 +15,14 @@
       },
       {
         "tag": "dns-direct",
-        "address": "https://doh.pub/dns-query",
+        "address": "https://dns.alidns.com/dns-query",
         "address_resolver": "dns-local",
         "address_strategy": "prefer_ipv4",
         "detour": "direct"
       },
       {
         "tag": "dns-local",
-        "address": "local",
+        "address": "223.6.6.6",
         "detour": "direct"
       },
       {
@@ -143,15 +143,15 @@
         "objective": "leastload",
         "strategy": "random",
         "max_fail": 1,
-        "max_rtt": "2000ms",
-        "expected": 3,
+        "max_rtt": "800ms",
+        "expected": 2,
         "baselines": [
+          "50ms",
+          "100ms",
+          "200ms",
+          "300ms",
           "500ms",
-          "800ms",
-          "1000ms",
-          "1500ms",
-          "1800ms",
-          "2000ms"
+          "800ms"
         ]
       }
     },
