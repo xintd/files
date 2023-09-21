@@ -81,7 +81,8 @@
       "listen_port": 8689,
       "sniff": true,
       "sniff_override_destination": false,
-      "domain_strategy": "prefer_ipv4"
+      "domain_strategy": "prefer_ipv4",
+      "set_system_proxy":  false
     },
     {
       "type": "tun",
@@ -283,6 +284,9 @@
         "geoip": [
           "private",
           "cn"
+        ],
+        "source_geoip": [
+          "private"
         ],
         "outbound": "direct"
       },
