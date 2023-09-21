@@ -82,7 +82,7 @@ dns:
   # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
     - 223.6.6.6
-    - tls://223.6.6.6:853   # DNS over TLS
+    - tls://223.6.6.6:853 # DNS over TLS
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
@@ -93,15 +93,16 @@ dns:
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
-  # 代理服务器解析DNS:当proxy里的server为域名时，使用该列表里的dns服务器解析
-  proxy-server-nameserver :
+    # 代理服务器解析DNS:当proxy里的server为域名时，使用该列表里的dns服务器解析
+  proxy-server-nameserver:
     - https://dns.alidns.com/dns-query
 
-  # 配置查询域名使用的 DNS 服务器  nameserver-policy 可以使用 geosite 分流 DNS 解析。
+  # 配置查询域名使用的 DNS 服务器
+  # nameserver-policy 可以使用 geosite 分流 DNS 解析。
   # 将国内域名指定为国内 DOH 进行解析，其余 DNS 使用境外 DOH 解析
   nameserver-policy:
     "geosite:cn,private":
-      - https://dns.alidns.com/dns-query  # DNS over HTTPS
+      - https://dns.alidns.com/dns-query # DNS over HTTPS
       - https://doh.pub/dns-query
     #'www.baidu.com': '8.8.8.8'
 
@@ -117,11 +118,21 @@ proxy-providers:
   clash:
     type: http
     path: ./proxies/clash.yaml
-    url: https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity  #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 3600
     health-check:
       enable: true
       url: https://www.google.com/generate_204
+      interval: 300
+    dialer-proxy: wg
+  ChromeGO:
+    type: http
+    path: ./proxies/ChromeGO.yaml
+    url: https://xintd.tk/vveg26/chromego_merge/raw/main/sub/merged_proxies.yaml
+    interval: 3600
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
       interval: 300
     dialer-proxy: wg
   NeteaseMusic:
@@ -146,9 +157,9 @@ proxy-groups:
     url: https://www.google.com/generate_204
     interval: 300
     proxies:
+      - ChromeGOM
       - other
       - replit
-      - wg
 
   - name: "replit"
     type: url-test
@@ -176,6 +187,12 @@ proxy-groups:
       - SG
       - HK&MO&TW
 
+  - name: ChromeGOM
+    type: url-test
+    interval: 300
+    url: https://www.google.com/generate_204
+    use:
+      - ChromeGO
   - name: HK&MO&TW
     type: url-test
     interval: 300
@@ -240,7 +257,8 @@ rule-providers:
     path: ./rule-set/cn_domain.yaml
     type: http
     url: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
-  applications: # 需要直连的常见软件列表
+  applications:
+    # 需要直连的常见软件列表
     type: http
     behavior: classical
     url: "https://xintd.tk/Loyalsoldier/clash-rules/raw/release/applications.txt"
@@ -254,7 +272,8 @@ rule-providers:
     interval: 86400
 
 rules:
-  - DOMAIN,xintd.tk,DIRECT     #订阅文件直连下载
+  - DOMAIN,xintd.tk,DIRECT #订阅文件直连下载
+  - GEOSITE,category-ads-all,REJECT
   # Netease Music Advertising
   - DOMAIN,admusicpic.music.126.net,REJECT
   - DOMAIN,iadmat.nosdn.127.net,REJECT
@@ -262,7 +281,6 @@ rules:
   - DOMAIN,iadmusicmatvideo.music.126.net,REJECT
   - RULE-SET,NeteaseMusic,🎵 网易云音乐
 
-  - GEOSITE,category-ads-all,REJECT
   - GEOSITE,bing,other
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
