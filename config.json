@@ -111,8 +111,6 @@
       "tag": "provider",
       "url": "https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity",
       "interval": "1h",
-      "exclude": "",
-      "include": "",
       "download_detour": "direct",
       "cache_file": "provider.txt",
       "detour": "wireguard-cf"
@@ -127,6 +125,21 @@
         "loadbalance",
         "auto"
       ]
+    },
+    {
+      "tag": "ChromeGOM",
+      "type": "urltest",
+      "outbounds": [
+        "hysteria",
+        "hysteria1",
+        "hysteria2",
+        "hysteria3",
+        "hysteria0",
+        "mss61"
+      ],
+      "url": "http://www.google.com/generate_204",
+      "interval": "1m",
+      "tolerance": 50
     },
     {
       "type": "loadbalance",
@@ -155,20 +168,6 @@
           "800ms"
         ]
       }
-    },
-    {
-      "tag": "ChromeGOM",
-      "type": "urltest",
-      "outbounds": [
-        "hysteria",
-        "hysteria1",
-        "hysteria2",
-        "hysteria3",
-        "hysteria0"
-      ],
-      "url": "http://www.google.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
     },
     {
       "tag": "auto",
@@ -209,7 +208,8 @@
       "transport": {
         "type": "ws",
         "path": "/vm"
-      }
+      },
+      "detour": "wireguard-cf"
     },
     {
       "tag": "xs_outlook_vm",
@@ -225,7 +225,8 @@
       "transport": {
         "type": "ws",
         "path": "/vm"
-      }
+      },
+      "detour": "wireguard-cf"
     },
     {
       "tag": "xs_outlook_tr",
@@ -239,7 +240,8 @@
       "transport": {
         "type": "ws",
         "path": "/tr"
-      }
+      },
+      "detour": "wireguard-cf"
     },
     {
       "type": "direct",
@@ -337,6 +339,16 @@
       "auth_str": "2S9M5Gs0pgRsaTObNghoLZx6wPkBJOGTFWvf4R06Us5hUNtfr7",
       "down_mbps": 80,
       "up_mbps": 30
+    },
+    {
+      "password": "thqfFCl0zl4Wyc0FaKxTQw==",
+      "server": "www2.dtku49.xyz",
+      "server_port": 11105,
+      "tag": "mss61",
+      "type": "shadowsocks",
+      "method": "2022-blake3-aes-128-gcm",
+      "network": "tcp",
+      "detour": "wireguard-cf"
     }
   ],
   "route": {
@@ -403,6 +415,7 @@
     "clash_api": {
       "external_controller": "127.0.0.1:9090",
       "external_ui": "clash_ui",
+      "external_ui_download_url": "https://xintd.tk/MetaCubeX/metacubexd/releases/download/v1.108.1/dist.zip",
       "external_ui_download_detour": "direct",
       "default_mode": "rule",
       "store_fakeip": true,
