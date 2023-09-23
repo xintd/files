@@ -51,9 +51,8 @@
           "A",
           "AAAA"
         ],
-        "geosite": "geolocation-!cn",
         "server": "dns-fake",
-        "rewrite_ttl": 999
+        "rewrite_ttl": 9
       },
       {
         "geosite": [
@@ -400,12 +399,6 @@
           "private"
         ],
         "outbound": "direct"
-      },
-      {
-        "geosite": [
-          "openai"
-        ],
-        "outbound": "auto"
       }
     ],
     "final": "🚀 PROXY",
