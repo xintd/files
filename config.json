@@ -403,16 +403,5 @@
     ],
     "final": "🚀 PROXY",
     "auto_detect_interface": true
-  },
-  "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "clash_ui",
-      "external_ui_download_url": "https://xintd.tk/MetaCubeX/metacubexd/releases/download/v1.110.0/dist.zip",
-      "external_ui_download_detour": "direct",
-      "default_mode": "rule",
-      "store_fakeip": true,
-      "cache_file": "cache.db"
-    }
   }
 }
