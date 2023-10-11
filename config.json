@@ -9,7 +9,7 @@
       {
         "tag": "dns-remote",
         "address": "https://dns.google/dns-query",
-        "address_resolver": "dns-direct",
+        "address_resolver": "dns-cloudflare",
         "address_strategy": "prefer_ipv4",
         "detour": "wireguard-cf"
       },
@@ -24,6 +24,11 @@
         "tag": "dns-local",
         "address": "223.6.6.6",
         "detour": "direct"
+      },
+      {
+        "tag": "dns-cloudflare",
+        "address": "1.0.0.1",
+        "detour": "wireguard-cf"
       },
       {
         "tag": "dns-block",
@@ -66,7 +71,7 @@
     "reverse_mapping": true,
     "fakeip": {
       "enabled": true,
-      "inet4_range": "198.18.0.0/15",
+      "inet4_range": "198.18.0.1/16",
       "inet6_range": "fc00::/18"
     },
     "strategy": "prefer_ipv4",
@@ -105,14 +110,22 @@
       "domain_strategy": "prefer_ipv4"
     }
   ],
-  "providers": [
+  "outbound_providers": [
     {
-      "tag": "provider",
-      "url": "https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity",
-      "interval": "1h",
-      "download_detour": "direct",
-      "cache_file": "provider.txt",
-      "detour": "wireguard-cf"
+      "tag": "chromego_merge",
+      "type": "http",
+      "download_url": "https://xintd.tk/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
+      "path": "clash.yaml",
+      "healthcheck_url": "http://www.google.com/generate_204",
+      "healthcheck_interval": "15m"
+    },
+    {
+      "tag": "Eternity",
+      "type": "http",
+      "download_url": "https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity",
+      "path": "eternity.txt",
+      "healthcheck_url": "http://www.google.com/generate_204",
+      "healthcheck_interval": "15m"
     }
   ],
   "outbounds": [
@@ -121,52 +134,23 @@
       "type": "selector",
       "outbounds": [
         "ChromeGOM",
-        "loadbalance",
+        "eternity",
         "auto"
       ]
     },
     {
       "tag": "ChromeGOM",
       "type": "urltest",
-      "outbounds": [
-        "hysteria",
-        "hysteria1",
-        "hysteria2",
-        "hysteria3",
-        "hysteria0",
-        "mss61"
-      ],
-      "url": "http://www.google.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "providers": [
+        "chromego_merge"
+      ]
     },
     {
-      "type": "loadbalance",
-      "tag": "loadbalance",
+      "tag": "eternity",
+      "type": "urltest",
       "providers": [
-        "provider"
-      ],
-      "check": {
-        "interval": "5m",
-        "sampling": 10,
-        "destination": "http://www.google.com/generate_204",
-        "connectivity": "http://connectivitycheck.platform.hicloud.com/generate_204"
-      },
-      "pick": {
-        "objective": "leastload",
-        "strategy": "random",
-        "max_fail": 1,
-        "max_rtt": "800ms",
-        "expected": 2,
-        "baselines": [
-          "50ms",
-          "100ms",
-          "200ms",
-          "300ms",
-          "500ms",
-          "800ms"
-        ]
-      }
+        "Eternity"
+      ]
     },
     {
       "tag": "auto",
@@ -253,101 +237,6 @@
     {
       "type": "dns",
       "tag": "dns-out"
-    },
-    {
-      "server": "167.160.91.115",
-      "server_port": 13928,
-      "tag": "hysteria0",
-      "tls": {
-        "enabled": true,
-        "server_name": "paypal.com",
-        "alpn": [
-          "h3"
-        ],
-        "insecure": true
-      },
-      "type": "hysteria",
-      "auth_str": "BF0LL4L2jlqSdW3KxjQv81AiFFjj90vWRHeUoqUuTVPeDAGvq3",
-      "down_mbps": 55,
-      "up_mbps": 11
-    },
-    {
-      "server": "173.234.25.52",
-      "server_port": 20164,
-      "tag": "hysteria1",
-      "tls": {
-        "enabled": true,
-        "server_name": "www.microsoft.com",
-        "alpn": [
-          "h3"
-        ],
-        "insecure": true
-      },
-      "type": "hysteria",
-      "auth_str": "Ljg6NNEATDqP97hdAdHe1lJv7ggtKc0h7zmCCZKCX3qY0LR64F",
-      "down_mbps": 55,
-      "up_mbps": 11
-    },
-    {
-      "server": "173.234.25.52",
-      "server_port": 20164,
-      "tag": "hysteria2",
-      "tls": {
-        "enabled": true,
-        "server_name": "www.microsoft.com",
-        "alpn": [
-          "h3"
-        ],
-        "insecure": true
-      },
-      "type": "hysteria",
-      "auth_str": "Ljg6NNEATDqP97hdAdHe1lJv7ggtKc0h7zmCCZKCX3qY0LR64F",
-      "down_mbps": 55,
-      "up_mbps": 11
-    },
-    {
-      "server": "51.158.54.46",
-      "server_port": 49139,
-      "tag": "hysteria3",
-      "tls": {
-        "enabled": true,
-        "server_name": "www.paypal.com",
-        "alpn": [
-          "h3"
-        ],
-        "insecure": true
-      },
-      "type": "hysteria",
-      "auth_str": "dongtaiwang.com",
-      "down_mbps": 55,
-      "up_mbps": 11
-    },
-    {
-      "server": "www.dtku50.xyz",
-      "server_port": 43250,
-      "tag": "hysteria",
-      "tls": {
-        "enabled": true,
-        "server_name": "bing.com",
-        "alpn": [
-          "h3"
-        ],
-        "insecure": true
-      },
-      "type": "hysteria",
-      "auth_str": "2S9M5Gs0pgRsaTObNghoLZx6wPkBJOGTFWvf4R06Us5hUNtfr7",
-      "down_mbps": 80,
-      "up_mbps": 30
-    },
-    {
-      "password": "thqfFCl0zl4Wyc0FaKxTQw==",
-      "server": "www2.dtku49.xyz",
-      "server_port": 11105,
-      "tag": "mss61",
-      "type": "shadowsocks",
-      "method": "2022-blake3-aes-128-gcm",
-      "network": "tcp",
-      "detour": "wireguard-cf"
     }
   ],
   "route": {
@@ -403,5 +292,10 @@
     ],
     "final": "🚀 PROXY",
     "auto_detect_interface": true
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090"
+    }
   }
 }
