@@ -117,7 +117,10 @@
       "download_url": "https://xintd.tk/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
       "path": "clash.yaml",
       "healthcheck_url": "http://www.google.com/generate_204",
-      "healthcheck_interval": "15m"
+      "healthcheck_interval": "15m",
+      "override_dialer": {
+        "detour": "wireguard-cf"
+      }
     },
     {
       "tag": "Eternity",
@@ -125,7 +128,10 @@
       "download_url": "https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity",
       "path": "eternity.txt",
       "healthcheck_url": "http://www.google.com/generate_204",
-      "healthcheck_interval": "15m"
+      "healthcheck_interval": "15m",
+      "override_dialer": {
+        "detour": "wireguard-cf"
+      }
     }
   ],
   "outbounds": [
@@ -241,12 +247,12 @@
   ],
   "route": {
     "geoip": {
-      "download_url": "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.db",
-      "download_detour": "direct"
+      "download_url": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.db",
+      "download_detour": "wireguard-cf"
     },
     "geosite": {
-      "download_url": "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db",
-      "download_detour": "direct"
+      "download_url": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db",
+      "download_detour": "wireguard-cf"
     },
     "rules": [
       {
@@ -286,6 +292,9 @@
         ],
         "source_geoip": [
           "private"
+        ],
+        "domain":[
+          "xintd.tk"
         ],
         "outbound": "direct"
       }
