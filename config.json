@@ -114,8 +114,9 @@
     {
       "tag": "chromego_merge",
       "type": "http",
-      "download_url": "https://xintd.tk/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
-      "path": "clash.yaml",
+      "download_url": "https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
+      "download_detour": "wireguard-cf",
+      "path": "singbox-chromego.yaml",
       "healthcheck_url": "http://www.google.com/generate_204",
       "healthcheck_interval": "15m",
       "override_dialer": {
@@ -125,8 +126,9 @@
     {
       "tag": "Eternity",
       "type": "http",
-      "download_url": "https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity",
-      "path": "eternity.txt",
+      "download_url": "https://github.com/xintd/Clash.Meta/raw/node/Eternity",
+      "download_detour": "wireguard-cf",
+      "path": "singbox-eternity.txt",
       "healthcheck_url": "http://www.google.com/generate_204",
       "healthcheck_interval": "15m",
       "override_dialer": {
@@ -292,9 +294,6 @@
         ],
         "source_geoip": [
           "private"
-        ],
-        "domain":[
-          "xintd.tk"
         ],
         "outbound": "direct"
       }
