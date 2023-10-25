@@ -117,7 +117,7 @@
       "download_url": "https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
       "download_detour": "wireguard-cf",
       "path": "singbox-chromego.yaml",
-      "healthcheck_url": "http://www.google.com/generate_204",
+      "healthcheck_url": "https://www.google.com/generate_204",
       "healthcheck_interval": "15m",
       "override_dialer": {
         "detour": "wireguard-cf"
@@ -129,7 +129,7 @@
       "download_url": "https://github.com/xintd/Clash.Meta/raw/node/Eternity",
       "download_detour": "wireguard-cf",
       "path": "singbox-eternity.txt",
-      "healthcheck_url": "http://www.google.com/generate_204",
+      "healthcheck_url": "https://www.google.com/generate_204",
       "healthcheck_interval": "15m",
       "override_dialer": {
         "detour": "wireguard-cf"
@@ -168,14 +168,14 @@
         "xs_outlook_vm",
         "xs_outlook_tr"
       ],
-      "url": "http://www.gstatic.com/generate_204",
+      "url": "https://www.google.com/generate_204",
       "interval": "1m",
       "tolerance": 50
     },
     {
       "type": "wireguard",
       "tag": "wireguard-cf",
-      "server": "162.159.195.9",
+      "server": "162.159.195.5",
       "server_port": 2408,
       "local_address": [
         "172.16.0.2/32",
@@ -184,6 +184,20 @@
       "private_key": "nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=",
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
       "mtu": 1280
+    },
+    {
+      "type": "wireguard",
+      "tag": "wg",
+      "server": "162.159.195.6",
+      "server_port": 2408,
+      "local_address": [
+        "172.16.0.2/32",
+        "fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5/128"
+      ],
+      "private_key": "vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=",
+      "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "mtu": 1280,
+      "detour": "🚀 PROXY"
     },
     {
       "tag": "vs_outlook_vm",
@@ -296,9 +310,15 @@
           "private"
         ],
         "outbound": "direct"
+      },
+      {
+        "domain": [
+          "www.google.com"
+        ],
+        "outbound": "auto"
       }
     ],
-    "final": "🚀 PROXY",
+    "final": "wg",
     "auto_detect_interface": true
   },
   "experimental": {
