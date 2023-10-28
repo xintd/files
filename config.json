@@ -117,8 +117,7 @@
       "download_url": "https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
       "download_detour": "wireguard-cf",
       "path": "singbox-chromego.yaml",
-      "healthcheck_url": "https://www.google.com/generate_204",
-      "healthcheck_interval": "15m",
+      "healthcheck_interval": "1h",
       "override_dialer": {
         "detour": "wireguard-cf"
       }
@@ -129,8 +128,7 @@
       "download_url": "https://github.com/xintd/Clash.Meta/raw/node/Eternity",
       "download_detour": "wireguard-cf",
       "path": "singbox-eternity.txt",
-      "healthcheck_url": "https://www.google.com/generate_204",
-      "healthcheck_interval": "15m",
+      "healthcheck_interval": "1h",
       "override_dialer": {
         "detour": "wireguard-cf"
       }
@@ -138,7 +136,15 @@
   ],
   "outbounds": [
     {
-      "tag": "🚀 PROXY",
+      "tag": "🚀",
+      "type": "selector",
+      "outbounds": [
+        "wg",
+        "PROXY"
+      ]
+    },
+    {
+      "tag": "PROXY",
       "type": "selector",
       "outbounds": [
         "ChromeGOM",
@@ -151,14 +157,17 @@
       "type": "urltest",
       "providers": [
         "chromego_merge"
-      ]
+      ],
+      "excludes": "油管",
+      "interval": "15m"
     },
     {
       "tag": "eternity",
       "type": "urltest",
       "providers": [
         "Eternity"
-      ]
+      ],
+      "interval": "1h"
     },
     {
       "tag": "auto",
@@ -168,9 +177,7 @@
         "xs_outlook_vm",
         "xs_outlook_tr"
       ],
-      "url": "https://www.google.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "1h"
     },
     {
       "type": "wireguard",
@@ -197,7 +204,7 @@
       "private_key": "vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=",
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
       "mtu": 1280,
-      "detour": "🚀 PROXY"
+      "detour": "ChromeGOM"
     },
     {
       "tag": "vs_outlook_vm",
@@ -316,9 +323,15 @@
           "www.google.com"
         ],
         "outbound": "auto"
+      },
+      {
+        "domain": [
+          "discord.com"
+        ],
+        "outbound": "wireguard-cf"
       }
     ],
-    "final": "wg",
+    "final": "🚀",
     "auto_detect_interface": true
   },
   "experimental": {
