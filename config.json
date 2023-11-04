@@ -8,9 +8,7 @@
     "servers": [
       {
         "tag": "dns-remote",
-        "address": "https://dns.google/dns-query",
-        "address_resolver": "dns-cloudflare",
-        "address_strategy": "prefer_ipv4",
+        "address": "https://1.1.1.1/dns-query",
         "detour": "wireguard-cf"
       },
       {
@@ -26,18 +24,12 @@
         "detour": "direct"
       },
       {
-        "tag": "dns-cloudflare",
-        "address": "1.0.0.1",
-        "detour": "wireguard-cf"
-      },
-      {
         "tag": "dns-block",
         "address": "rcode://success"
       },
       {
         "tag": "dns-fake",
-        "address": "fakeip",
-        "strategy": "prefer_ipv4"
+        "address": "fakeip"
       }
     ],
     "rules": [
@@ -86,7 +78,7 @@
       "sniff": true,
       "sniff_override_destination": false,
       "domain_strategy": "prefer_ipv4",
-      "set_system_proxy": false
+      "set_system_proxy": true
     },
     {
       "type": "tun",
@@ -117,10 +109,7 @@
       "download_url": "https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
       "download_detour": "wireguard-cf",
       "path": "singbox-chromego.yaml",
-      "healthcheck_interval": "1h",
-      "override_dialer": {
-        "detour": "wireguard-cf"
-      }
+      "healthcheck_interval": "1h"
     },
     {
       "tag": "Eternity",
@@ -128,7 +117,7 @@
       "download_url": "https://github.com/xintd/Clash.Meta/raw/node/Eternity",
       "download_detour": "wireguard-cf",
       "path": "singbox-eternity.txt",
-      "healthcheck_interval": "1h",
+      "healthcheck_interval": "2h",
       "override_dialer": {
         "detour": "wireguard-cf"
       }
@@ -136,18 +125,10 @@
   ],
   "outbounds": [
     {
-      "tag": "🚀",
+      "tag": "🚀PROXY",
       "type": "selector",
       "outbounds": [
         "wg",
-        "PROXY"
-      ]
-    },
-    {
-      "tag": "PROXY",
-      "type": "selector",
-      "outbounds": [
-        "ChromeGOM",
         "eternity",
         "auto"
       ]
@@ -159,7 +140,7 @@
         "chromego_merge"
       ],
       "excludes": "油管",
-      "interval": "15m"
+      "interval": "1h"
     },
     {
       "tag": "eternity",
@@ -167,7 +148,7 @@
       "providers": [
         "Eternity"
       ],
-      "interval": "1h"
+      "interval": "2h"
     },
     {
       "tag": "auto",
@@ -177,7 +158,7 @@
         "xs_outlook_vm",
         "xs_outlook_tr"
       ],
-      "interval": "1h"
+      "interval": "2h"
     },
     {
       "type": "wireguard",
@@ -186,7 +167,7 @@
       "server_port": 2408,
       "local_address": [
         "172.16.0.2/32",
-        "fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5/128"
+        "2606:4700:110:8d52:4b0c:f6ce:c69d:872c/128"
       ],
       "private_key": "nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=",
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
@@ -199,7 +180,7 @@
       "server_port": 2408,
       "local_address": [
         "172.16.0.2/32",
-        "fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5/128"
+        "2606:4700:110:8d52:4b0c:f6ce:c69d:872c/128"
       ],
       "private_key": "vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=",
       "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
@@ -331,7 +312,7 @@
         "outbound": "wireguard-cf"
       }
     ],
-    "final": "🚀",
+    "final": "🚀PROXY",
     "auto_detect_interface": true
   },
   "experimental": {

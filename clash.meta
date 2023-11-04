@@ -10,8 +10,8 @@ log-level: info # 日志等级 silent/error/warning/info/debug
 #自定义 geodata url
 geodata-mode: true
 geox-url:
-  geoip: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
-  geosite: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
 
 ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 
@@ -87,9 +87,9 @@ dns:
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
   nameserver:
-    - https://cloudflare-dns.com/dns-query#wg
+    - https://cloudflare-dns.com/dns-query#replit
     # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
-    - https://mozilla.cloudflare-dns.com/dns-query#wg&h3=true # 指定策略组和使用 HTTP/3
+    - https://mozilla.cloudflare-dns.com/dns-query#replit&h3=true # 指定策略组和使用 HTTP/3
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
@@ -107,8 +107,8 @@ dns:
     #'www.baidu.com': '8.8.8.8'
 
 proxies:
-  - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.5","port":2408,"ip":"172.16.0.2","ipv6":"fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
-  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"fd01:5ca1:ab1e:80fa:ab85:6eea:213f:f4a5","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"ChromeGOM"}
+  - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.5","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
+  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"ChromeGOM"}
   - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vmess","name":"vs_outlook_vm","ws-opts":{"path":"/vm","headers":{"host":"vs.uoldsix.repl.co"}},"server":"vs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
   - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vless","name":"vs_outlook_vl","server":"vs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"vs.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"vs.uoldsix.repl.co"}},"dialer-proxy":"wg"}
   - {"uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","type":"vmess","name":"xs_outlook_vm","ws-opts":{"path":"/vm?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"server":"xs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
@@ -119,51 +119,45 @@ proxy-providers:
   clash:
     type: http
     path: ./proxies/clash.yaml
-    url: https://xintd.tk/xintd/Clash.Meta/raw/node/Eternity #【Meta专属】支持解析V2rayN等工具使用的普通订阅
+    url: https://github.com/xintd/Clash.Meta/raw/node/Eternity #【Meta专属】支持解析V2rayN等工具使用的普通订阅
     interval: 3600
     health-check:
       enable: true
       url: https://www.google.com/generate_204
-      interval: 300
+      interval: 3600
     dialer-proxy: wg
   ChromeGO:
     type: http
     path: ./proxies/ChromeGO.yaml
-    url: https://xintd.tk/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml
+    url: https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml
     interval: 3600
     health-check:
       enable: true
       url: https://www.google.com/generate_204
-      interval: 300
-    dialer-proxy: wg
+      interval: 3600
   NeteaseMusic:
     type: http
     path: ./proxies/NeteaseMusic.yaml
-    url: https://xintd.tk/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/Proxy/NeteaseMusic.yaml
+    url: https://github.com/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/Proxy/NeteaseMusic.yaml
     interval: 3600
     health-check:
       enable: true
       url: https://www.google.com/generate_204
-      interval: 300
+      interval: 3600
 
 proxy-groups:
-  - name: 🚀
+  - name: 🚀PROXY
     type: select
     proxies:
       - wg0
-      - PROXY
-
-  - name: PROXY
-    type: select
-    proxies:
-      - ChromeGOM
       - other
       - replit
 
   - name: ChromeGOM
     type: url-test
-    interval: 300
+    interval: 3600
     url: https://www.google.com/generate_204
+    lazy: true
     use:
       - ChromeGO
     exclude-filter: '油管'
@@ -186,7 +180,7 @@ proxy-groups:
       - xs_outlook_vl
       - xs_outlook_tr
   - name: "other"
-    type: load-balance
+    type: url-test
     interval: 300
     strategy: round-robin
     url: https://www.google.com/generate_204
@@ -264,23 +258,21 @@ rule-providers:
     interval: 86400
     path: ./rule-set/cn_domain.yaml
     type: http
-    url: "https://xintd.tk/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
-  applications:
-    # 需要直连的常见软件列表
+    url: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
+  applications:      # 需要直连的常见软件列表
     type: http
     behavior: classical
-    url: "https://xintd.tk/Loyalsoldier/clash-rules/raw/release/applications.txt"
+    url: "https://github.com/Loyalsoldier/clash-rules/raw/release/applications.txt"
     path: ./rule-set/applications.yaml
     interval: 86400
   NeteaseMusic:
     type: http
     behavior: classical
     path: ./rule-set/NeteaseMusic.yaml
-    url: "https://xintd.tk/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/RuleSet/NeteaseMusic.yaml"
+    url: "https://github.com/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/RuleSet/NeteaseMusic.yaml"
     interval: 86400
 
 rules:
-  - DOMAIN,xintd.tk,DIRECT #订阅文件直连下载
   - GEOSITE,category-ads-all,REJECT
   # Netease Music Advertising
   - DOMAIN,admusicpic.music.126.net,REJECT
@@ -290,7 +282,7 @@ rules:
   - RULE-SET,NeteaseMusic,🎵 网易云音乐
 
   - DOMAIN,discord.com,wg
-  - GEOSITE,bing,🚀
+  - GEOSITE,bing,🚀PROXY
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
@@ -305,4 +297,4 @@ rules:
   - GEOSITE,category-games@cn,DIRECT
 
   - DOMAIN,www.google.com,replit
-  - MATCH,🚀
+  - MATCH,🚀PROXY
