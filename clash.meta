@@ -108,7 +108,7 @@ dns:
 
 proxies:
   - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.5","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
-  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"ChromeGOM"}
+  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"relay"}
   - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vmess","name":"vs_outlook_vm","ws-opts":{"path":"/vm","headers":{"host":"vs.uoldsix.repl.co"}},"server":"vs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
   - {"uuid":"bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1","type":"vless","name":"vs_outlook_vl","server":"vs.uoldsix.repl.co","port":443,"skip-cert-verify":true,"udp":true,"tls":true,"network":"ws","servername":"vs.uoldsix.repl.co","ws-opts":{"path":"/vl","headers":{"host":"vs.uoldsix.repl.co"}},"dialer-proxy":"wg"}
   - {"uuid":"0c7821b4-cf14-478e-96f3-fad1c03be56e","type":"vmess","name":"xs_outlook_vm","ws-opts":{"path":"/vm?ed=2048","headers":{"host":"xs.uoldsix.repl.co"}},"server":"xs.uoldsix.repl.co","port":"443","alterId":"0","cipher":"auto","network":"ws","tls":true,"udp":true,"dialer-proxy":"wg"}
@@ -150,8 +150,19 @@ proxy-groups:
     type: select
     proxies:
       - wg0
+      - node
+
+  - name: "relay"
+    type: relay
+    proxies:
+      - node
+      - DIRECT
+
+  - name: node
+    type: select
+    proxies:
+      - ChromeGOM
       - other
-      - replit
 
   - name: ChromeGOM
     type: url-test
@@ -160,25 +171,6 @@ proxy-groups:
     lazy: true
     use:
       - ChromeGO
-    exclude-filter: '油管'
-
-  - name: 🎵 网易云音乐
-    type: select
-    filter: '(?i)(解锁)'
-    use:
-      - NeteaseMusic
-
-  - name: "replit"
-    type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
-    lazy: true
-    proxies:
-      - vs_outlook_vl
-      - vs_outlook_vm
-      - xs_outlook_vm
-      - xs_outlook_vl
-      - xs_outlook_tr
   - name: "other"
     type: url-test
     interval: 300
@@ -194,6 +186,22 @@ proxy-groups:
       - KR
       - SG
       - HK&MO&TW
+  - name: 🎵 网易云音乐
+    type: select
+    filter: '(?i)(解锁)'
+    use:
+      - NeteaseMusic
+  - name: "replit"
+    type: url-test
+    interval: 300
+    url: https://www.google.com/generate_204
+    lazy: true
+    proxies:
+      - vs_outlook_vl
+      - vs_outlook_vm
+      - xs_outlook_vm
+      - xs_outlook_vl
+      - xs_outlook_tr
 
   - name: HK&MO&TW
     type: url-test
