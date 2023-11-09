@@ -129,8 +129,7 @@
       "type": "selector",
       "outbounds": [
         "wg",
-        "node",
-        "wireguard-cf"
+        "node"
       ]
     },
     {
@@ -138,7 +137,8 @@
       "type": "selector",
       "outbounds": [
         "ChromeGOM",
-        "eternity"
+        "eternity",
+        "auto"
       ]
     },
     {
