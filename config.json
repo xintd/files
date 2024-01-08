@@ -137,8 +137,7 @@
       "type": "selector",
       "outbounds": [
         "ChromeGOM",
-        "eternity",
-        "auto"
+        "eternity"
       ]
     },
     {
@@ -154,16 +153,6 @@
       "type": "urltest",
       "providers": [
         "Eternity"
-      ],
-      "interval": "2h"
-    },
-    {
-      "tag": "auto",
-      "type": "urltest",
-      "outbounds": [
-        "vs_outlook_vm",
-        "xs_outlook_vm",
-        "xs_outlook_tr"
       ],
       "interval": "2h"
     },
@@ -198,55 +187,6 @@
       "type": "direct",
       "tag": "node-direct",
       "detour": "node"
-    },
-    {
-      "tag": "vs_outlook_vm",
-      "type": "vmess",
-      "server": "vs.uoldsix.repl.co",
-      "server_port": 443,
-      "uuid": "bd6383c9-b37d-4e25-85ee-3c98b0eb0dc1",
-      "security": "auto",
-      "alter_Id": 0,
-      "tls": {
-        "enabled": true
-      },
-      "transport": {
-        "type": "ws",
-        "path": "/vm"
-      },
-      "detour": "wireguard-cf"
-    },
-    {
-      "tag": "xs_outlook_vm",
-      "type": "vmess",
-      "server": "xs.uoldsix.repl.co",
-      "server_port": 443,
-      "uuid": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
-      "security": "auto",
-      "alter_Id": 0,
-      "tls": {
-        "enabled": true
-      },
-      "transport": {
-        "type": "ws",
-        "path": "/vm"
-      },
-      "detour": "wireguard-cf"
-    },
-    {
-      "tag": "xs_outlook_tr",
-      "type": "trojan",
-      "server": "xs.uoldsix.repl.co",
-      "server_port": 443,
-      "password": "0c7821b4-cf14-478e-96f3-fad1c03be56e",
-      "tls": {
-        "enabled": true
-      },
-      "transport": {
-        "type": "ws",
-        "path": "/tr"
-      },
-      "detour": "wireguard-cf"
     },
     {
       "type": "direct",
