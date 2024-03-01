@@ -130,15 +130,6 @@ proxy-providers:
       enable: true
       url: https://www.google.com/generate_204
       interval: 3600
-  NeteaseMusic:
-    type: http
-    path: ./proxies/NeteaseMusic.yaml
-    url: https://github.com/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/Proxy/NeteaseMusic.yaml
-    interval: 3600
-    health-check:
-      enable: true
-      url: https://www.google.com/generate_204
-      interval: 3600
 
 proxy-groups:
   - name: 🚀PROXY
@@ -181,11 +172,6 @@ proxy-groups:
       - KR
       - SG
       - HK&MO&TW
-  - name: 🎵 网易云音乐
-    type: select
-    filter: '(?i)(解锁)'
-    use:
-      - NeteaseMusic
 
   - name: HK&MO&TW
     type: url-test
@@ -271,7 +257,6 @@ rules:
   - DOMAIN,iadmat.nosdn.127.net,REJECT
   - DOMAIN,iadmusicmat.music.126.net,REJECT
   - DOMAIN,iadmusicmatvideo.music.126.net,REJECT
-  - RULE-SET,NeteaseMusic,🎵 网易云音乐
 
   - DOMAIN,discord.com,wg
   - GEOSITE,bing,🚀PROXY
