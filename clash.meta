@@ -231,24 +231,6 @@ proxy-groups:
       - clash
 
 rule-providers:
-  cn:
-    behavior: domain
-    interval: 86400
-    path: ./rule-set/cn_domain.yaml
-    type: http
-    url: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
-  applications:      # 需要直连的常见软件列表
-    type: http
-    behavior: classical
-    url: "https://github.com/Loyalsoldier/clash-rules/raw/release/applications.txt"
-    path: ./rule-set/applications.yaml
-    interval: 86400
-  NeteaseMusic:
-    type: http
-    behavior: classical
-    path: ./rule-set/NeteaseMusic.yaml
-    url: "https://github.com/DesperadoJ/Rules-for-UnblockNeteaseMusic/raw/master/Clash/RuleSet/NeteaseMusic.yaml"
-    interval: 86400
 
 rules:
   - GEOSITE,category-ads-all,REJECT
@@ -263,8 +245,6 @@ rules:
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
-  - RULE-SET,applications,DIRECT
-  - RULE-SET,cn,DIRECT
   - GEOSITE,cn,DIRECT
   - GEOIP,CN,DIRECT
   - GEOSITE,onedrive,DIRECT
