@@ -164,14 +164,12 @@ proxy-groups:
     url: https://www.google.com/generate_204
     lazy: true
     proxies:
+      - HK&MO&TW
       - US
       - Europe
       - CA&AU
+      - SG&KR&JP
       - ZZ
-      - JP
-      - KR
-      - SG
-      - HK&MO&TW
 
   - name: HK&MO&TW
     type: url-test
@@ -187,11 +185,11 @@ proxy-groups:
     filter: '(?i)(加拿大|🇨🇦|🇦🇺|澳大|CA|AU)'
     use:
       - clash
-  - name: SG
+  - name: SG&KR&JP
     type: url-test
     interval: 300
     url: https://www.google.com/generate_204
-    filter: '(?i)(新加坡|🇸🇬|SG)'
+    filter: '(?i)(新加坡|🇸🇬|SG|韩|韓|🇰🇷|KR|日|🇯🇵|JP)'
     use:
       - clash
   - name: US
@@ -208,20 +206,6 @@ proxy-groups:
     filter: '(?i)(德|🇩🇪|🇫🇷|法|🇳🇱|🇫🇮|DE|FR|NL|FI)'
     use:
       - clash
-  - name: JP
-    type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
-    filter: '(?i)(日|🇯🇵|JP)'
-    use:
-      - clash
-  - name: KR
-    type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
-    filter: '(?i)(韩|韓|🇰🇷|KR)'
-    use:
-      - clash
   - name: ZZ
     type: url-test
     interval: 300
@@ -234,14 +218,10 @@ rule-providers:
 
 rules:
   - GEOSITE,category-ads-all,REJECT
-  # Netease Music Advertising
-  - DOMAIN,admusicpic.music.126.net,REJECT
-  - DOMAIN,iadmat.nosdn.127.net,REJECT
-  - DOMAIN,iadmusicmat.music.126.net,REJECT
-  - DOMAIN,iadmusicmatvideo.music.126.net,REJECT
 
   - DOMAIN,discord.com,wg
-  - GEOSITE,bing,🚀PROXY
+  - GEOSITE,bing,node
+  - GEOSITE,github,other
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
