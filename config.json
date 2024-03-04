@@ -117,7 +117,7 @@
       "download_url": "https://github.com/xintd/Clash.Meta/raw/node/Eternity",
       "download_detour": "wireguard-cf",
       "path": "singbox-eternity.txt",
-      "healthcheck_interval": "2h",
+      "healthcheck_interval": "1h",
       "override_dialer": {
         "detour": "wireguard-cf"
       }
@@ -146,7 +146,8 @@
       "providers": [
         "chromego_merge"
       ],
-      "interval": "1h"
+      "interval": "1h",
+      "idle_timeout": "1h"
     },
     {
       "tag": "eternity",
@@ -154,7 +155,8 @@
       "providers": [
         "Eternity"
       ],
-      "interval": "2h"
+      "interval": "1h",
+      "idle_timeout": "1h"
     },
     {
       "type": "wireguard",
@@ -250,12 +252,6 @@
           "private"
         ],
         "outbound": "direct"
-      },
-      {
-        "domain": [
-          "www.google.com"
-        ],
-        "outbound": "auto"
       },
       {
         "domain": [
