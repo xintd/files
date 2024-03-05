@@ -268,8 +268,8 @@
           "geosite-microsoft@cn",
           "geosite-onedrive"
         ],
-        "source_ip_is_private": false,
-        "ip_is_private": false,
+        "source_ip_is_private": true,
+        "ip_is_private": true,
         "invert": false,
         "outbound": "direct"
       }
