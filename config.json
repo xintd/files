@@ -34,11 +34,7 @@
     ],
     "rules": [
       {
-        "geosite": "private",
-        "server": "dns-local"
-      },
-      {
-        "geosite": "category-ads-all",
+        "rule_set": "geosite-category-ads-all",
         "server": "dns-block",
         "disable_cache": true
       },
@@ -52,9 +48,11 @@
         "rewrite_ttl": 9
       },
       {
-        "geosite": [
-          "category-games@cn",
-          "cn"
+        "rule_set": [
+          "geosite-cn",
+          "geoip-cn",
+          "geosite-microsoft@cn",
+          "geosite-onedrive"
         ],
         "server": "dns-direct"
       }
@@ -204,14 +202,43 @@
     }
   ],
   "route": {
-    "geoip": {
-      "download_url": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.db",
-      "download_detour": "wireguard-cf"
-    },
-    "geosite": {
-      "download_url": "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.db",
-      "download_detour": "wireguard-cf"
-    },
+    "rule_set": [
+      {
+        "tag": "geosite-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs",
+        "download_detour": "wireguard-cf"
+      },
+      {
+        "tag": "geoip-cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
+        "download_detour": "wireguard-cf"
+      },
+      {
+        "tag": "geosite-microsoft@cn",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-microsoft@cn.srs",
+        "download_detour": "wireguard-cf"
+      },
+      {
+        "tag": "geosite-onedrive",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-onedrive.srs",
+        "download_detour": "wireguard-cf"
+      },
+      {
+        "tag": "geosite-category-ads-all",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs",
+        "download_detour": "wireguard-cf"
+      }
+    ],
     "rules": [
       {
         "port": 53,
@@ -231,39 +258,29 @@
         "outbound": "block"
       },
       {
-        "geosite": "category-ads-all",
+        "rule_set": "geosite-category-ads-all",
         "outbound": "block"
       },
       {
-        "geosite": [
-          "private",
-          "cn",
-          "category-games@cn",
-          "microsoft@cn",
-          "apple-cn",
-          "steam@cn",
-          "onedrive"
+        "rule_set": [
+          "geosite-cn",
+          "geoip-cn",
+          "geosite-microsoft@cn",
+          "geosite-onedrive"
         ],
-        "geoip": [
-          "private",
-          "cn"
-        ],
-        "source_geoip": [
-          "private"
-        ],
+        "source_ip_is_private": false,
+        "ip_is_private": false,
+        "invert": false,
         "outbound": "direct"
-      },
-      {
-        "domain": [
-          "discord.com"
-        ],
-        "outbound": "wireguard-cf"
       }
     ],
     "final": "🚀PROXY",
     "auto_detect_interface": true
   },
   "experimental": {
+    "cache_file": {
+      "enabled": true
+    },
     "clash_api": {
       "external_controller": "127.0.0.1:9090"
     }
