@@ -8,21 +8,24 @@ find-process-mode: strict
 log-level: info # 日志等级 silent/error/warning/info/debug
 
 #自定义 geodata url
-geodata-mode: true
+geo-auto-update: true # 是否自动更新 geodata
+geo-update-interval: 24 # 更新间隔，单位：小时
 geox-url:
   geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
   geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
 
 ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 
-external-controller: 0.0.0.0:9090 # RESTful API 监听地址
+external-controller: 0.0.0.0:9093 # RESTful API 监听地址
 external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
 # secret: "123456" # `Authorization:Bearer ${secret}`
 global-client-fingerprint: chrome
 
 # 类似于 /etc/hosts, 仅支持配置单个 IP
 hosts:
-# '*.clash.dev': 127.0.0.1
+# '*.mihomo.dev': 127.0.0.1
+# baidu.com: google.com # 只允许配置一个别名
 
 profile:
   # 存储 select 选择记录
@@ -32,10 +35,9 @@ profile:
 
 tun:
   enable: true
-  stack: system # gvisor / lwip
+  stack: system # gvisor/mixed
   dns-hijack:
-    - any:1053 # 需要劫持的 DNS
-  auto-route: true
+    - 0.0.0.0:53 # 需要劫持的 DNS
 
 # 嗅探域名
 sniffer:
@@ -48,15 +50,15 @@ sniffer:
   # 是否使用嗅探结果作为实际访问，默认 true
   # 全局配置，优先级低于 sniffer.sniff 实际配置
   override-destination: false
-  sniff:
-    # TLS 默认如果不配置 ports 默认嗅探 443
+  sniff: # TLS 和 QUIC 默认如果不配置 ports 默认嗅探 443
+    QUIC:
+    #  ports: [ 443 ]
     TLS:
     #  ports: [443, 8443]
 
     # 默认嗅探 80
-    HTTP:
-      # 需要嗅探的端口
-      ports: [ 80, 8080-8880 ]
+    HTTP: # 需要嗅探的端口
+      ports: [80, 8080-8880]
       # 可覆盖 sniffer.override-destination
       override-destination: true
   force-domain:
@@ -66,16 +68,14 @@ sniffer:
   #   - Mijia Cloud
 
 dns:
+  cache-algorithm: arc
   enable: true # 关闭将使用系统 DNS
   prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
-  listen: :1053 # 开启 DNS 服务器监听
+  listen: 0.0.0.0:53 # 开启 DNS 服务器监听
   ipv6: true # false 将返回 AAAA 的空结果
 
   enhanced-mode: fake-ip # or redir-host
   fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
-  fake-ip-filter:
-    - '*'
-    - '+.lan'
   #use-hosts: true # 查询 hosts
 
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
@@ -83,6 +83,7 @@ dns:
   default-nameserver:
     - 223.6.6.6
     - tls://223.6.6.6:853 # DNS over TLS
+    - system # append DNS server from system configuration. If not found, it would print an error log and skip.
 
   # DNS 主要域名配置
   # 支持 UDP，TCP，DoT，DoH，DoQ
@@ -93,9 +94,6 @@ dns:
     - dhcp://en0 # dns from dhcp
     - quic://dns.adguard.com:784 # DNS over QUIC
     # - '8.8.8.8#en0' # 兼容指定DNS出口网卡
-    # 代理服务器解析DNS:当proxy里的server为域名时，使用该列表里的dns服务器解析
-  proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
 
   # 配置查询域名使用的 DNS 服务器
   # nameserver-policy 可以使用 geosite 分流 DNS 解析。
@@ -104,7 +102,7 @@ dns:
     "geosite:cn,private":
       - https://dns.alidns.com/dns-query # DNS over HTTPS
       - https://doh.pub/dns-query
-    #'www.baidu.com': '8.8.8.8'
+    "geosite:category-ads-all": rcode://success
 
 proxies:
   - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.5","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
@@ -118,8 +116,8 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://www.google.com/generate_204
-      interval: 3600
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
     dialer-proxy: wg
   ChromeGO:
     type: http
@@ -128,8 +126,8 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://www.google.com/generate_204
-      interval: 3600
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
 
 proxy-groups:
   - name: 🚀PROXY
@@ -152,16 +150,16 @@ proxy-groups:
 
   - name: ChromeGOM
     type: url-test
-    interval: 3600
-    url: https://www.google.com/generate_204
-    lazy: true
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     use:
       - ChromeGO
+
   - name: "other"
     type: url-test
-    interval: 300
+    interval: 600
     strategy: round-robin
-    url: https://www.google.com/generate_204
+    url: https://cp.cloudflare.com/generate_204
     lazy: true
     proxies:
       - HK&MO&TW
@@ -173,43 +171,43 @@ proxy-groups:
 
   - name: HK&MO&TW
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾)'
     use:
       - clash
   - name: CA&AU
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     filter: '(?i)(加拿大|🇨🇦|🇦🇺|澳大|CA|AU)'
     use:
       - clash
   - name: SG&KR&JP
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     filter: '(?i)(新加坡|🇸🇬|SG|韩|韓|🇰🇷|KR|日|🇯🇵|JP)'
     use:
       - clash
   - name: US
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     filter: '(?i)(美|🇺🇸|United States|US)'
     use:
       - clash
   - name: Europe
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     filter: '(?i)(德|🇩🇪|🇫🇷|法|🇳🇱|🇫🇮|DE|FR|NL|FI)'
     use:
       - clash
   - name: ZZ
     type: url-test
-    interval: 300
-    url: https://www.google.com/generate_204
+    interval: 600
+    url: https://cp.cloudflare.com/generate_204
     exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
       - clash
@@ -220,8 +218,8 @@ rules:
   - GEOSITE,category-ads-all,REJECT
 
   - DOMAIN,discord.com,wg
+  - GEOSITE,github,wg
   - GEOSITE,bing,node
-  - GEOSITE,github,other
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
