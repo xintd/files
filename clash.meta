@@ -122,7 +122,8 @@ proxy-providers:
   ChromeGO:
     type: http
     path: ./proxies/ChromeGO.yaml
-    url: https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml
+    url: https://mareep.netlify.app/sub/merged_proxies_new.yaml
+    #url: https://github.com/linzjian666/chromego_extractor/raw/main/outputs/clash_meta.yaml
     interval: 3600
     health-check:
       enable: true
