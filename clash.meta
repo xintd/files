@@ -219,7 +219,7 @@ rules:
   - GEOSITE,category-ads-all,REJECT
 
   - DOMAIN,discord.com,wg
-  - GEOSITE,github,wg
+  - DOMAIN,metacubex.github.io,wg
   - GEOSITE,bing,node
   # 直连
   - GEOSITE,private,DIRECT,no-resolve
