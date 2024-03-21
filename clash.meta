@@ -106,7 +106,7 @@ dns:
 
 proxies:
   - {"private-key":"nVomBifkPR1GzzhHS7QWys8zPzA5tjPM/8MjNAC6ih4=","name":"wg","type":"wireguard","server":"162.159.195.5","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true}
-  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"relay"}
+  - {"private-key":"vFQf66WYEtPCFnxj5qdQG/WMk+SzYv8C5IBfXXp4qms=","name":"wg0","type":"wireguard","server":"162.159.195.6","port":2408,"ip":"172.16.0.2","ipv6":"2606:4700:110:8d52:4b0c:f6ce:c69d:872c","public-key":"bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=","udp":true,"dialer-proxy":"node"}
 
 proxy-providers:
   clash:
@@ -134,14 +134,8 @@ proxy-groups:
   - name: 🚀PROXY
     type: select
     proxies:
+      - node
       - wg0
-      - node
-
-  - name: "relay"
-    type: relay
-    proxies:
-      - node
-      - DIRECT
 
   - name: node
     type: select
