@@ -116,7 +116,7 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://cp.cloudflare.com/generate_204
+      url: https://www.google.com/generate_204
       interval: 600
     dialer-proxy: wg
   ChromeGO:
@@ -127,7 +127,7 @@ proxy-providers:
     interval: 3600
     health-check:
       enable: true
-      url: https://cp.cloudflare.com/generate_204
+      url: https://www.google.com/generate_204
       interval: 600
 
 proxy-groups:
@@ -146,7 +146,7 @@ proxy-groups:
   - name: ChromeGOM
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     use:
       - ChromeGO
 
@@ -154,7 +154,7 @@ proxy-groups:
     type: url-test
     interval: 600
     strategy: round-robin
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     lazy: true
     proxies:
       - HK&MO&TW
@@ -167,42 +167,42 @@ proxy-groups:
   - name: HK&MO&TW
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾)'
     use:
       - clash
   - name: CA&AU
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(加拿大|🇨🇦|🇦🇺|澳大|CA|AU)'
     use:
       - clash
   - name: SG&KR&JP
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(新加坡|🇸🇬|SG|韩|韓|🇰🇷|KR|日|🇯🇵|JP)'
     use:
       - clash
   - name: US
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(美|🇺🇸|United States|US)'
     use:
       - clash
   - name: Europe
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     filter: '(?i)(德|🇩🇪|🇫🇷|法|🇳🇱|🇫🇮|DE|FR|NL|FI)'
     use:
       - clash
   - name: ZZ
     type: url-test
     interval: 600
-    url: https://cp.cloudflare.com/generate_204
+    url: https://www.google.com/generate_204
     exclude-filter: '(?i)(🇭🇰|🇲🇴|🇹🇼|HK|台湾|🇨🇦|🇦🇺|CA|AU|🇸🇬|SG|🇺🇸|US|🇩🇪|🇫🇷|🇳🇱|🇫🇮|DE|FR|NL|FI|🇯🇵|JP|🇰🇷|KR)'
     use:
       - clash
