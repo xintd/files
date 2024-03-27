@@ -104,7 +104,7 @@
     {
       "tag": "chromego_merge",
       "type": "http",
-      "download_url": "https://github.com/vveg26/chromego_merge/raw/main/sub/merged_proxies_new.yaml",
+      "download_url": "https://chromegoclash.marcol.top/",
       "download_detour": "wireguard-cf",
       "path": "singbox-chromego.yaml",
       "healthcheck_interval": "1h"
